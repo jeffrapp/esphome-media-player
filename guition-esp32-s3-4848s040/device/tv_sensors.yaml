@@ -116,7 +116,26 @@ text_sensor:
               return id(is_tv_mode)
                   && (x == "idle" || x == "off" || x == "standby");
           then:
-            - script.execute: exit_tv_mode
+            - if:
+                condition:
+                  lambda: |-
+                    return id(media_source_sensor).has_state()
+                        && id(media_source_sensor).state == "TV";
+                then:
+                  - lambda: 'id(is_tv_idle) = true;'
+                  - script.stop: start_hide_track_info_timer
+                  - script.execute: show_track_view
+                  - lvgl.label.update:
+                      id: media_title_label
+                      text: "TV"
+                  - lambda: 'id(artist_has_content) = false;'
+                  - lvgl.widget.hide: media_artist_label
+                  - lvgl.widget.hide: media_play_pause_button
+                  - lvgl.widget.hide: media_time_label
+                  - lvgl.widget.hide: media_progress_bar
+                  - script.execute: backlight_wake_timeout
+                else:
+                  - script.execute: exit_tv_mode
       - if:
           condition:
             lambda: |-
@@ -134,6 +153,13 @@ text_sensor:
                 condition:
                   lambda: 'return x == "playing";'
                 then:
+                  - if:
+                      condition:
+                        lambda: 'return id(is_tv_idle);'
+                      then:
+                        - lambda: 'id(is_tv_idle) = false;'
+                        - lvgl.widget.show: media_play_pause_button
+                        - lvgl.widget.show: media_time_label
                   - script.stop: backlight_wake_timeout
                   - lvgl.resume:
                   - lvgl.widget.hide:
@@ -151,13 +177,17 @@ text_sensor:
                         - script.execute: show_track_view
                   - script.execute: start_hide_track_info_timer
                 else:
-                  - script.stop: start_hide_track_info_timer
-                  - script.execute: show_track_view
-                  - lvgl.widget.show:
-                      id: media_play_icon
-                  - lvgl.widget.hide:
-                      id: media_pause_icon
-                  - script.execute: backlight_wake_timeout
+                  - if:
+                      condition:
+                        lambda: 'return !id(is_tv_idle);'
+                      then:
+                        - script.stop: start_hide_track_info_timer
+                        - script.execute: show_track_view
+                        - lvgl.widget.show:
+                            id: media_play_icon
+                        - lvgl.widget.hide:
+                            id: media_pause_icon
+                        - script.execute: backlight_wake_timeout
 
   - platform: template
     id: tv_media_position_updated_at_sensor
