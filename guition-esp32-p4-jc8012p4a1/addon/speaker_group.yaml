@@ -44,22 +44,10 @@ globals:
 
 text_sensor:
   - platform: homeassistant
-    id: sonos_entity_ids_sensor
-    entity_id: sensor.sonos_speaker_ids
+    id: sonos_speakers_sensor
+    entity_id: sensor.sonos_speakers
     on_value:
       - script.execute: parse_speakers
-
-  - platform: homeassistant
-    id: sonos_names_sensor
-    entity_id: sensor.sonos_speaker_names
-    on_value:
-      - script.execute: parse_speakers
-
-  - platform: homeassistant
-    id: sonos_volumes_sensor
-    entity_id: sensor.sonos_speaker_volumes
-    on_value:
-      - script.execute: parse_speaker_volumes
 
   - platform: template
     id: group_members_sensor
@@ -68,77 +56,90 @@ text_sensor:
 
 script:
   # ---------------------------------------------------------------------------
-  # Parse the comma-separated entity_ids and names from the HA template sensor
-  # into fixed-size global arrays. Then refresh the LVGL panel.
+  # Parse the pipe-delimited sensor (ids|names|volumes) from the single HA
+  # template sensor into fixed-size global arrays. Volumes are assigned
+  # directly during reorder so no separate volume-mapping pass is needed.
   # ---------------------------------------------------------------------------
   - id: parse_speakers
     mode: restart
     then:
       - lambda: |-
-          std::string ids_raw = id(sonos_entity_ids_sensor).state;
-          std::string names_raw = id(sonos_names_sensor).has_state()
-              ? id(sonos_names_sensor).state : "";
+          std::string raw = id(sonos_speakers_sensor).state;
 
-          // Reset
-          id(speaker_count) = 0;
-          for (int i = 0; i < 8; i++) {
-            id(speaker_entity_ids)[i] = "";
-            id(speaker_names)[i] = "";
-            id(speaker_grouped)[i] = false;
-          }
-
-          if (ids_raw.empty() || ids_raw == "None" || ids_raw == "unknown") {
+          if (raw.empty() || raw == "None" || raw == "unknown") {
+            id(speaker_count) = 0;
             ESP_LOGW("speaker_group", "No Sonos speakers found");
             lv_obj_add_flag(id(speakers_title_label), LV_OBJ_FLAG_HIDDEN);
             lv_obj_add_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);
             return;
           }
 
-          // Parse entity_ids
-          std::vector<std::string> ids;
-          size_t start = 0, end;
-          while ((end = ids_raw.find(',', start)) != std::string::npos && ids.size() < 8) {
-            std::string token = ids_raw.substr(start, end - start);
-            while (!token.empty() && token.front() == ' ') token.erase(0, 1);
-            while (!token.empty() && token.back() == ' ') token.pop_back();
-            if (!token.empty()) ids.push_back(token);
-            start = end + 1;
-          }
-          if (start < ids_raw.size() && ids.size() < 8) {
-            std::string token = ids_raw.substr(start);
-            while (!token.empty() && token.front() == ' ') token.erase(0, 1);
-            while (!token.empty() && token.back() == ' ') token.pop_back();
-            if (!token.empty()) ids.push_back(token);
+          // Split on '|' into ids / names / volumes sections
+          size_t p1 = raw.find('|');
+          size_t p2 = (p1 != std::string::npos) ? raw.find('|', p1 + 1) : std::string::npos;
+          std::string ids_raw   = (p1 != std::string::npos) ? raw.substr(0, p1) : raw;
+          std::string names_raw = (p1 != std::string::npos && p2 != std::string::npos)
+              ? raw.substr(p1 + 1, p2 - p1 - 1) : "";
+          std::string vols_raw  = (p2 != std::string::npos) ? raw.substr(p2 + 1) : "";
+
+          // Helper: split a comma-separated string into a vector, trimming whitespace
+          auto split_csv = [](const std::string &s, size_t max) {
+            std::vector<std::string> out;
+            size_t start = 0, end;
+            while ((end = s.find(',', start)) != std::string::npos && out.size() < max) {
+              std::string t = s.substr(start, end - start);
+              while (!t.empty() && t.front() == ' ') t.erase(0, 1);
+              while (!t.empty() && t.back() == ' ') t.pop_back();
+              out.push_back(t);
+              start = end + 1;
+            }
+            if (start < s.size() && out.size() < max) {
+              std::string t = s.substr(start);
+              while (!t.empty() && t.front() == ' ') t.erase(0, 1);
+              while (!t.empty() && t.back() == ' ') t.pop_back();
+              out.push_back(t);
+            }
+            return out;
+          };
+
+          std::vector<std::string> ids   = split_csv(ids_raw, 8);
+          std::vector<std::string> names = split_csv(names_raw, 8);
+          std::vector<std::string> vtoks = split_csv(vols_raw, 8);
+
+          // Convert volume strings to floats
+          std::vector<float> vols;
+          for (auto &t : vtoks) {
+            auto v = esphome::parse_number<float>(t);
+            vols.push_back(v.has_value() ? v.value() : 0.0f);
           }
 
-          // Parse names (same delimiter)
-          std::vector<std::string> names;
-          start = 0;
-          while ((end = names_raw.find(',', start)) != std::string::npos && names.size() < 8) {
-            std::string token = names_raw.substr(start, end - start);
-            while (!token.empty() && token.front() == ' ') token.erase(0, 1);
-            while (!token.empty() && token.back() == ' ') token.pop_back();
-            if (!token.empty()) names.push_back(token);
-            start = end + 1;
-          }
-          if (start < names_raw.size() && names.size() < 8) {
-            std::string token = names_raw.substr(start);
-            while (!token.empty() && token.front() == ' ') token.erase(0, 1);
-            while (!token.empty() && token.back() == ' ') token.pop_back();
-            if (!token.empty()) names.push_back(token);
+          // Reset globals
+          id(speaker_count) = 0;
+          for (int i = 0; i < 8; i++) {
+            id(speaker_entity_ids)[i] = "";
+            id(speaker_names)[i] = "";
+            id(speaker_grouped)[i] = false;
+            id(speaker_volumes)[i] = 0.0f;
           }
 
-          // Store into globals, putting the selected media player first
-          std::string selected = id(media_player_entity).state;
-          int count = 0;
+          if (ids.empty()) {
+            ESP_LOGW("speaker_group", "No Sonos speakers found");
+            lv_obj_add_flag(id(speakers_title_label), LV_OBJ_FLAG_HIDDEN);
+            lv_obj_add_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);
+            return;
+          }
 
           // Selected player goes in slot 0 — if it's not in the Sonos list,
           // this device isn't controlling a Sonos speaker so hide grouping.
+          std::string selected = id(media_player_entity).state;
+          int count = 0;
           bool found_selected = false;
+
           for (size_t i = 0; i < ids.size(); i++) {
             if (ids[i] == selected) {
               id(speaker_entity_ids)[0] = ids[i];
               id(speaker_names)[0] = (i < names.size()) ? names[i] : ids[i];
+              id(speaker_volumes)[0] = (i < vols.size()) ? vols[i] : 0.0f;
               id(speaker_grouped)[0] = true;
               count = 1;
               found_selected = true;
@@ -158,6 +159,7 @@ script:
             if (ids[i] != selected) {
               id(speaker_entity_ids)[count] = ids[i];
               id(speaker_names)[count] = (i < names.size()) ? names[i] : ids[i];
+              id(speaker_volumes)[count] = (i < vols.size()) ? vols[i] : 0.0f;
               count++;
             }
           }
@@ -173,75 +175,11 @@ script:
             lv_obj_add_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);
           }
 
-      - script.execute: update_group_state
-      - script.execute: parse_speaker_volumes
-
-  # ---------------------------------------------------------------------------
-  # Parse volume levels from the HA template sensor and map them to speaker
-  # slots using entity ID matching. Volumes arrive in sensor discovery order;
-  # we need them in our slot order.
-  # ---------------------------------------------------------------------------
-  - id: parse_speaker_volumes
-    mode: restart
-    then:
-      - lambda: |-
-          if (!id(sonos_volumes_sensor).has_state() || !id(sonos_entity_ids_sensor).has_state())
-            return;
-
-          std::string vols_raw = id(sonos_volumes_sensor).state;
-          std::string ids_raw = id(sonos_entity_ids_sensor).state;
-
-          if (vols_raw.empty() || vols_raw == "unknown" || vols_raw == "None") return;
-
-          // Parse sensor-order entity IDs
-          std::vector<std::string> sensor_ids;
-          size_t start = 0, end;
-          while ((end = ids_raw.find(',', start)) != std::string::npos && sensor_ids.size() < 8) {
-            std::string t = ids_raw.substr(start, end - start);
-            while (!t.empty() && t.front() == ' ') t.erase(0, 1);
-            while (!t.empty() && t.back() == ' ') t.pop_back();
-            if (!t.empty()) sensor_ids.push_back(t);
-            start = end + 1;
-          }
-          if (start < ids_raw.size() && sensor_ids.size() < 8) {
-            std::string t = ids_raw.substr(start);
-            while (!t.empty() && t.front() == ' ') t.erase(0, 1);
-            while (!t.empty() && t.back() == ' ') t.pop_back();
-            if (!t.empty()) sensor_ids.push_back(t);
-          }
-
-          // Parse sensor-order volumes
-          std::vector<float> sensor_vols;
-          start = 0;
-          while ((end = vols_raw.find(',', start)) != std::string::npos && sensor_vols.size() < 8) {
-            std::string t = vols_raw.substr(start, end - start);
-            while (!t.empty() && t.front() == ' ') t.erase(0, 1);
-            while (!t.empty() && t.back() == ' ') t.pop_back();
-            auto v = esphome::parse_number<float>(t);
-            sensor_vols.push_back(v.has_value() ? v.value() : 0.0f);
-            start = end + 1;
-          }
-          if (start < vols_raw.size() && sensor_vols.size() < 8) {
-            std::string t = vols_raw.substr(start);
-            while (!t.empty() && t.front() == ' ') t.erase(0, 1);
-            while (!t.empty() && t.back() == ' ') t.pop_back();
-            auto v = esphome::parse_number<float>(t);
-            sensor_vols.push_back(v.has_value() ? v.value() : 0.0f);
-          }
-
-          // Map sensor-order volumes to slot-order by matching entity IDs
-          for (int slot = 0; slot < id(speaker_count); slot++) {
-            for (size_t s = 0; s < sensor_ids.size(); s++) {
-              if (sensor_ids[s] == id(speaker_entity_ids)[slot] && s < sensor_vols.size()) {
-                id(speaker_volumes)[slot] = sensor_vols[s];
-                break;
-              }
-            }
-          }
-
           // Sync the arc to the primary speaker's volume
           int primary_pct = (int)(id(speaker_volumes)[0] * 100.0f);
           id(prev_arc_value) = primary_pct;
+
+      - script.execute: update_group_state
 
   # ---------------------------------------------------------------------------
   # Parse group_members and update the grouped state for each speaker slot.
