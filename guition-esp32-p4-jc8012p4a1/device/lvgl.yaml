@@ -367,13 +367,16 @@ lvgl:
               # Speaker list container
               - obj:
                   id: speakers_container
-                  x: 60
+                  x: 0
                   y: 130
-                  width: 660
-                  height: 640
+                  width: 1280
+                  height: 670
                   bg_opa: 0%
                   border_width: 0
-                  pad_all: 0
+                  pad_left: 60
+                  pad_right: 60
+                  pad_top: 0
+                  pad_bottom: 0
                   scrollable: true
                   scrollbar_mode: auto
                   hidden: true
@@ -385,12 +388,12 @@ lvgl:
                     # --- Group Volume row (always first) ---
                     - obj:
                         id: group_volume_row
-                        width: 640
+                        width: 1160
                         height: 100
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
@@ -418,22 +421,22 @@ lvgl:
                               id: group_volume_slider
                               x: 0
                               y: 46
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 30
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               on_value:
                                 - lvgl.label.update:
@@ -452,48 +455,48 @@ lvgl:
                     # --- Row 0 (selected speaker / leader) ---
                     - obj:
                         id: speaker_row_0
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_0
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 500
                           - slider:
                               id: speaker_slider_0
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -506,27 +509,27 @@ lvgl:
                     # --- Row 1 ---
                     - obj:
                         id: speaker_row_1
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_1
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_1
@@ -535,11 +538,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -549,7 +551,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_1
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -557,22 +559,22 @@ lvgl:
                               id: speaker_slider_1
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -585,27 +587,27 @@ lvgl:
                     # --- Row 2 ---
                     - obj:
                         id: speaker_row_2
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_2
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_2
@@ -614,11 +616,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -628,7 +629,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_2
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -636,22 +637,22 @@ lvgl:
                               id: speaker_slider_2
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -664,27 +665,27 @@ lvgl:
                     # --- Row 3 ---
                     - obj:
                         id: speaker_row_3
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_3
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_3
@@ -693,11 +694,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -707,7 +707,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_3
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -715,22 +715,22 @@ lvgl:
                               id: speaker_slider_3
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -743,27 +743,27 @@ lvgl:
                     # --- Row 4 ---
                     - obj:
                         id: speaker_row_4
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_4
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_4
@@ -772,11 +772,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -786,7 +785,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_4
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -794,22 +793,22 @@ lvgl:
                               id: speaker_slider_4
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -822,27 +821,27 @@ lvgl:
                     # --- Row 5 ---
                     - obj:
                         id: speaker_row_5
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_5
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_5
@@ -851,11 +850,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -865,7 +863,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_5
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -873,22 +871,22 @@ lvgl:
                               id: speaker_slider_5
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -901,27 +899,27 @@ lvgl:
                     # --- Row 6 ---
                     - obj:
                         id: speaker_row_6
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_6
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_6
@@ -930,11 +928,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -944,7 +941,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_6
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -952,22 +949,22 @@ lvgl:
                               id: speaker_slider_6
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:
@@ -980,27 +977,27 @@ lvgl:
                     # --- Row 7 ---
                     - obj:
                         id: speaker_row_7
-                        width: 640
-                        height: 110
+                        width: 1160
+                        height: 122
                         bg_opa: 0%
                         border_width: 1
-                        border_color: 0x444444
-                        border_opa: 100%
+                        border_color: 0xFFFFFF
+                        border_opa: 20%
                         border_side: bottom
                         pad_left: 0
                         pad_right: 0
-                        pad_top: 10
-                        pad_bottom: 12
+                        pad_top: 16
+                        pad_bottom: 16
                         scrollable: false
                         hidden: true
                         widgets:
                           - label:
                               id: speaker_name_7
                               text: ""
-                              text_font: roboto30_font
+                              text_font: roboto_light40_font
                               text_color: 0xFFFFFF
                               x: 0
-                              y: 4
+                              y: 0
                               width: 420
                           - button:
                               id: speaker_btn_7
@@ -1009,11 +1006,10 @@ lvgl:
                               width: 120px
                               height: 40px
                               radius: 20
-                              bg_opa: 30%
-                              bg_color: 0xFFFFFF
+                              bg_opa: 0%
                               border_width: 1
-                              border_color: 0x888888
-                              border_opa: 60%
+                              border_color: 0xFFFFFF
+                              border_opa: 80%
                               shadow_width: 0
                               pad_all: 0
                               on_click:
@@ -1023,7 +1019,7 @@ lvgl:
                               widgets:
                                 - label:
                                     id: speaker_btn_label_7
-                                    text: "+ Add"
+                                    text: "Add"
                                     text_font: roboto19_font
                                     text_color: 0xFFFFFF
                                     align: center
@@ -1031,22 +1027,22 @@ lvgl:
                               id: speaker_slider_7
                               x: 0
                               y: 50
-                              width: 620
-                              height: 36
+                              width: 1140
+                              height: 46
                               min_value: 0
                               max_value: 100
                               value: 0
                               bg_color: 0x1A3A30
                               bg_opa: 100%
-                              radius: 18
+                              radius: 23
                               indicator:
                                 bg_color: 0x2D5A4E
-                                radius: 18
+                                radius: 23
                               knob:
-                                bg_color: 0xFFFFFF
-                                radius: 4
-                                width: 14
-                                height: 32
+                                bg_opa: 0%
+                                radius: 0
+                                width: 0
+                                height: 0
                                 border_width: 0
                               hidden: true
                               on_value:

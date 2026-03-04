@@ -290,12 +290,12 @@ script:
 
               if (id(speaker_grouped)[i]) {
                 if (btn_labels[i]) lv_label_set_text(btn_labels[i], "Remove");
-                lv_obj_set_height(rows[i], 110);
+                lv_obj_set_height(rows[i], 122);
                 lv_obj_clear_flag(sliders[i], LV_OBJ_FLAG_HIDDEN);
                 lv_slider_set_value(sliders[i], (int)(id(speaker_volumes)[i] * 100.0f), LV_ANIM_OFF);
               } else {
-                if (btn_labels[i]) lv_label_set_text(btn_labels[i], "+ Add");
-                lv_obj_set_height(rows[i], 48);
+                if (btn_labels[i]) lv_label_set_text(btn_labels[i], "Add");
+                lv_obj_set_height(rows[i], 56);
                 lv_obj_add_flag(sliders[i], LV_OBJ_FLAG_HIDDEN);
               }
             } else {

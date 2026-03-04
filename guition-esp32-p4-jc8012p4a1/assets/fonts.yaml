@@ -2,14 +2,7 @@
 # Extended Latin glyphs cover accented characters (ñ, é, ü, µ, etc.) and common
 # symbols (©, ®, ™, €, •, etc.) for song metadata.
 # Two content lines in each >- block: the fold produces exactly one space glyph.
-# roboto56_font uses regular weight with minimal glyphs (digits + %) for the volume dial.
 font:
-  - file: "gfonts://Roboto"
-    id: roboto56_font
-    size: 56
-    bpp: 4
-    glyphs: " 0123456789%"
-
   - file: "gfonts://Roboto@Light"
     id: roboto_light88_font
     size: 88
