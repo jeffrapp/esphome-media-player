@@ -1,38 +1,26 @@
 # =============================================================================
-# SONOS SPEAKER DISCOVERY - Home Assistant Template Sensor
+# SONOS SPEAKER DISCOVERY - Home Assistant Setup
 # =============================================================================
-# Copy this file into your Home Assistant packages/ directory to auto-discover
-# all Sonos media_player entities. The ESPHome media panel subscribes to
-# this sensor to populate the speaker grouping UI.
+# Create two template sensor helpers in the Home Assistant UI so the ESPHome
+# panel can auto-discover your Sonos speakers for the grouping UI.
 #
-# Setup:
-#   1. Copy this file to <HA config>/packages/sonos_speakers.yaml
-#   2. Ensure "packages:" is enabled in your configuration.yaml:
-#        homeassistant:
-#          packages: !include_dir_named packages
-#   3. Restart Home Assistant
+# Steps:
 #
-# The sensor exposes two attributes consumed by the ESPHome panel:
-#   - entity_ids: comma-separated media_player entity IDs
-#   - names: comma-separated friendly names (matching order)
+#   1. Go to Settings > Devices & Services > Helpers tab
+#
+#   2. Click "+ Create Helper" > Template > Template a sensor
+#        Name:           Sonos Speaker IDs
+#        State template: {{ integration_entities("sonos") | select("match", "media_player") | join(",") }}
+#      Leave everything else as default and click Submit.
+#
+#   3. Click "+ Create Helper" > Template > Template a sensor
+#        Name:           Sonos Speaker Names
+#        State template: {{ integration_entities("sonos") | select("match", "media_player") | map("state_attr", "friendly_name") | join(",") }}
+#      Leave everything else as default and click Submit.
+#
+# Done. The ESPHome panel picks up these sensors automatically.
+#
+# To verify, check Developer Tools > States:
+#   sensor.sonos_speaker_ids   → e.g. media_player.office,media_player.kitchen
+#   sensor.sonos_speaker_names → e.g. Office,Kitchen
 # =============================================================================
-
-template:
-  - sensor:
-      - name: "Sonos Speakers"
-        unique_id: esphome_media_panel_sonos_speakers
-        icon: "mdi:speaker-multiple"
-        state: >-
-          {{ integration_entities("sonos")
-             | select("match", "media_player")
-             | list | count }}
-        attributes:
-          entity_ids: >-
-            {{ integration_entities("sonos")
-               | select("match", "media_player")
-               | join(",") }}
-          names: >-
-            {{ integration_entities("sonos")
-               | select("match", "media_player")
-               | map("state_attr", "friendly_name")
-               | join(",") }}

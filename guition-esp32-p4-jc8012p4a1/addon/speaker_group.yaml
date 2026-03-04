@@ -33,15 +33,13 @@ globals:
 text_sensor:
   - platform: homeassistant
     id: sonos_entity_ids_sensor
-    entity_id: sensor.sonos_speakers
-    attribute: entity_ids
+    entity_id: sensor.sonos_speaker_ids
     on_value:
       - script.execute: parse_speakers
 
   - platform: homeassistant
     id: sonos_names_sensor
-    entity_id: sensor.sonos_speakers
-    attribute: names
+    entity_id: sensor.sonos_speaker_names
 
   - platform: template
     id: group_members_sensor
