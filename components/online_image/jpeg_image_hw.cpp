@@ -245,14 +245,14 @@ int HOT HwJpegDecoder::decode(uint8_t *buffer, size_t size) {
 
 int HwJpegDecoder::software_decode_fallback_(uint8_t *buffer, size_t size) {
   ESP_LOGI(TAG, "Falling back to software JPEG decoder");
-  JPEGDEC jpeg;
+  auto jpeg = esphome::make_unique<JPEGDEC>();
 
-  if (!jpeg.openRAM(buffer, size, sw_fallback_draw_callback_)) {
-    ESP_LOGE(TAG, "Software fallback: could not open image: %d", jpeg.getLastError());
+  if (!jpeg->openRAM(buffer, size, sw_fallback_draw_callback_)) {
+    ESP_LOGE(TAG, "Software fallback: could not open image: %d", jpeg->getLastError());
     return DECODE_ERROR_INVALID_TYPE;
   }
 
-  auto jpeg_type = jpeg.getJPEGType();
+  auto jpeg_type = jpeg->getJPEGType();
   if (jpeg_type == JPEG_MODE_INVALID) {
     ESP_LOGE(TAG, "Software fallback: invalid JPEG");
     return DECODE_ERROR_INVALID_TYPE;
@@ -262,16 +262,16 @@ int HwJpegDecoder::software_decode_fallback_(uint8_t *buffer, size_t size) {
     return DECODE_ERROR_INVALID_TYPE;
   }
 
-  int bpp = jpeg.getBpp();
-  int src_w = jpeg.getWidth();
-  int src_h = jpeg.getHeight();
+  int bpp = jpeg->getBpp();
+  int src_w = jpeg->getWidth();
+  int src_h = jpeg->getHeight();
   ESP_LOGD(TAG, "Software fallback: image size %d x %d, bpp: %d", src_w, src_h, bpp);
 
-  jpeg.setUserPointer(this);
+  jpeg->setUserPointer(this);
   if (bpp <= 8) {
-    jpeg.setPixelType(EIGHT_BIT_GRAYSCALE);
+    jpeg->setPixelType(EIGHT_BIT_GRAYSCALE);
   } else {
-    jpeg.setPixelType(this->image_->is_big_endian() ? RGB565_BIG_ENDIAN : RGB565_LITTLE_ENDIAN);
+    jpeg->setPixelType(this->image_->is_big_endian() ? RGB565_BIG_ENDIAN : RGB565_LITTLE_ENDIAN);
   }
 
   int decode_options = 0;
@@ -302,14 +302,14 @@ int HwJpegDecoder::software_decode_fallback_(uint8_t *buffer, size_t size) {
     return DECODE_ERROR_OUT_OF_MEMORY;
   }
 
-  if (!jpeg.decode(0, 0, decode_options)) {
+  if (!jpeg->decode(0, 0, decode_options)) {
     ESP_LOGE(TAG, "Software fallback: decode failed");
-    jpeg.close();
+    jpeg->close();
     return DECODE_ERROR_UNSUPPORTED_FORMAT;
   }
 
   this->decoded_bytes_ = size;
-  jpeg.close();
+  jpeg->close();
   ESP_LOGI(TAG, "Software JPEG fallback decode complete (%d x %d)", out_w, out_h);
   return size;
 }
