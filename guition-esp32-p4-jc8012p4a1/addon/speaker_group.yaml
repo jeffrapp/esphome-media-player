@@ -295,7 +295,7 @@ script:
                 lv_label_set_text(vol_labels[i], vol_buf);
                 lv_obj_clear_flag(vol_labels[i], LV_OBJ_FLAG_HIDDEN);
                 lv_obj_set_style_bg_opa(cards[i], LV_OPA_COVER, 0);
-                lv_obj_set_style_bg_color(cards[i], lv_color_hex(0x2C2C2C), 0);
+                lv_obj_set_style_bg_color(cards[i], lv_color_hex(0x212121), 0);
                 lv_obj_set_style_border_width(cards[i], 0, 0);
                 lv_obj_set_style_flex_main_place(cards[i], LV_FLEX_ALIGN_SPACE_BETWEEN, 0);
                 lv_obj_clear_flag(btns[i], LV_OBJ_FLAG_HIDDEN);

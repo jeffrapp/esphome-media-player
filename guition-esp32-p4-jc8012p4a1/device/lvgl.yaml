@@ -390,7 +390,7 @@ lvgl:
                         width: 200
                         height: 180
                         radius: 24
-                        bg_color: 0x2C2C2C
+                        bg_color: 0x212121
                         bg_opa: 100%
                         border_width: 0
                         pad_left: 20
@@ -433,7 +433,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -442,7 +442,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -458,7 +458,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -474,7 +474,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 0 (selected speaker / leader, no toggle) ---
@@ -529,7 +529,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -538,7 +538,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -557,7 +557,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -576,7 +576,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 1 ---
@@ -635,7 +635,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -644,7 +644,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -663,7 +663,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -682,7 +682,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 2 ---
@@ -741,7 +741,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -750,7 +750,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -769,7 +769,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -788,7 +788,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 3 ---
@@ -847,7 +847,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -856,7 +856,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -875,7 +875,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -894,7 +894,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 4 ---
@@ -953,7 +953,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -962,7 +962,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -981,7 +981,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -1000,7 +1000,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 5 ---
@@ -1059,7 +1059,7 @@ lvgl:
                               width: 130
                               height: 44
                               radius: 22
-                              bg_color: 0xFFFFFF
+                              bg_color: 0x535353
                               bg_opa: 100%
                               border_width: 0
                               pad_all: 0
@@ -1068,7 +1068,7 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 0
+                                pad_column: 1
                               widgets:
                                 - button:
                                     width: 65
@@ -1087,7 +1087,7 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
                                     width: 65
@@ -1106,7 +1106,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 6 ---
@@ -1162,9 +1162,11 @@ lvgl:
                                     text_opa: 80%
                           - obj:
                               id: speaker_btns_6
-                              width: 100%
-                              height: SIZE_CONTENT
-                              bg_opa: 0%
+                              width: 130
+                              height: 44
+                              radius: 22
+                              bg_color: 0x535353
+                              bg_opa: 100%
                               border_width: 0
                               pad_all: 0
                               scrollable: false
@@ -1172,14 +1174,15 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 12
+                                pad_column: 1
                               widgets:
                                 - button:
-                                    width: 50
-                                    height: 50
-                                    radius: 25
-                                    bg_color: 0xFFFFFF
+                                    width: 65
+                                    height: 44
+                                    radius: 0
+                                    bg_opa: 0%
                                     border_width: 0
+                                    shadow_width: 0
                                     pad_all: 0
                                     on_click:
                                       - script.execute:
@@ -1190,14 +1193,15 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
-                                    width: 50
-                                    height: 50
-                                    radius: 25
-                                    bg_color: 0xFFFFFF
+                                    width: 65
+                                    height: 44
+                                    radius: 0
+                                    bg_opa: 0%
                                     border_width: 0
+                                    shadow_width: 0
                                     pad_all: 0
                                     on_click:
                                       - script.execute:
@@ -1208,7 +1212,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
                     # --- Card 7 ---
@@ -1264,9 +1268,11 @@ lvgl:
                                     text_opa: 80%
                           - obj:
                               id: speaker_btns_7
-                              width: 100%
-                              height: SIZE_CONTENT
-                              bg_opa: 0%
+                              width: 130
+                              height: 44
+                              radius: 22
+                              bg_color: 0x535353
+                              bg_opa: 100%
                               border_width: 0
                               pad_all: 0
                               scrollable: false
@@ -1274,14 +1280,15 @@ lvgl:
                               layout:
                                 type: flex
                                 flex_flow: ROW
-                                pad_column: 12
+                                pad_column: 1
                               widgets:
                                 - button:
-                                    width: 50
-                                    height: 50
-                                    radius: 25
-                                    bg_color: 0xFFFFFF
+                                    width: 65
+                                    height: 44
+                                    radius: 0
+                                    bg_opa: 0%
                                     border_width: 0
+                                    shadow_width: 0
                                     pad_all: 0
                                     on_click:
                                       - script.execute:
@@ -1292,14 +1299,15 @@ lvgl:
                                       - label:
                                           text: "${icon_minus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
                                 - button:
-                                    width: 50
-                                    height: 50
-                                    radius: 25
-                                    bg_color: 0xFFFFFF
+                                    width: 65
+                                    height: 44
+                                    radius: 0
+                                    bg_opa: 0%
                                     border_width: 0
+                                    shadow_width: 0
                                     pad_all: 0
                                     on_click:
                                       - script.execute:
@@ -1310,7 +1318,7 @@ lvgl:
                                       - label:
                                           text: "${icon_plus}"
                                           text_font: icon_font_small
-                                          text_color: 0x000000
+                                          text_color: 0xFFFFFF
                                           align: center
 
         # ---------------------------------------------------------------
