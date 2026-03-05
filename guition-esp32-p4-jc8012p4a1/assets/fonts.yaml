@@ -41,6 +41,7 @@ font:
     bpp: 4
     glyphs: >-
       !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~
+      0
 
   - file: "gfonts://Roboto@Light"
     id: roboto_light23_font
