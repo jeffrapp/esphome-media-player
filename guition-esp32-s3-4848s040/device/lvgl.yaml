@@ -13,7 +13,7 @@ lvgl:
         lv_obj_clear_flag(id(speakers_container), LV_OBJ_FLAG_SCROLL_ELASTIC);
         lv_obj_set_scroll_dir(id(speakers_container), LV_DIR_VER);
         lv_indev_t *indev = lv_indev_get_next(NULL);
-        if (indev) lv_indev_set_scroll_limit(indev, 20);
+        if (indev) indev->driver->scroll_limit = 20;
 
   pages:
     - id: main_page
