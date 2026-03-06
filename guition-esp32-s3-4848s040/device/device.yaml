@@ -447,7 +447,7 @@ script:
     then:
       - if:
           condition:
-            lambda: 'return id(is_panel_open);'
+            lambda: 'return id(is_panel_open) && lv_obj_has_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);'
           then:
             - lvgl.widget.hide: settings_panel
             - lambda: 'id(is_panel_open) = false;'
