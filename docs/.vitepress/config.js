@@ -26,8 +26,8 @@ export default {
       {
         text: 'Features',
         items: [
-          { text: 'Speaker Grouping', link: '/speaker-grouping' },
-          { text: 'Settings', link: '/configurable-settings' },
+          { text: 'Speaker Grouping', link: '/features/speaker-grouping' },
+          { text: 'Settings', link: '/features/settings' },
         ],
       },
       {
