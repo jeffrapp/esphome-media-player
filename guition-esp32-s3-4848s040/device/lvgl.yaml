@@ -474,10 +474,10 @@ lvgl:
               - label:
                   id: speakers_title_label
                   text: "Speakers"
-                  text_font: roboto_light60_font
+                  text_font: roboto_light55_font
                   text_color: 0xFFFFFF
                   x: 20
-                  y: 24
+                  y: 19
                   width: 400
                   text_align: left
                   hidden: true
@@ -507,7 +507,7 @@ lvgl:
                     # --- Group Volume card ---
                     - obj:
                         id: group_vol_card
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x212121
@@ -610,7 +610,7 @@ lvgl:
                     # --- Card 0 (selected speaker / leader, no toggle) ---
                     - obj:
                         id: speaker_card_0
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -722,7 +722,7 @@ lvgl:
                     # --- Card 1 ---
                     - obj:
                         id: speaker_card_1
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -839,7 +839,7 @@ lvgl:
                     # --- Card 2 ---
                     - obj:
                         id: speaker_card_2
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -956,7 +956,7 @@ lvgl:
                     # --- Card 3 ---
                     - obj:
                         id: speaker_card_3
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -1073,7 +1073,7 @@ lvgl:
                     # --- Card 4 ---
                     - obj:
                         id: speaker_card_4
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -1190,7 +1190,7 @@ lvgl:
                     # --- Card 5 ---
                     - obj:
                         id: speaker_card_5
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -1307,7 +1307,7 @@ lvgl:
                     # --- Card 6 ---
                     - obj:
                         id: speaker_card_6
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
@@ -1424,7 +1424,7 @@ lvgl:
                     # --- Card 7 ---
                     - obj:
                         id: speaker_card_7
-                        width: 222
+                        width: 212
                         height: 180
                         radius: 24
                         bg_color: 0x000000
