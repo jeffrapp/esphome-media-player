@@ -4,6 +4,8 @@ Control multi-room speaker groups directly from the touchscreen panel. The setti
 
 Speaker grouping requires speakers that support the `media_player.join` and `media_player.unjoin` services in Home Assistant.
 
+![Speaker grouping panel](../images/guition-esp32-p4-jc8012p4a1-multi-speaker.jpg)
+
 ## How it works
 
 - The panel auto-discovers all speakers from the configured integration in your Home Assistant instance

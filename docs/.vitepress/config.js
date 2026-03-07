@@ -27,6 +27,7 @@ export default {
         text: 'Features',
         items: [
           { text: 'Speaker Grouping', link: '/features/speaker-grouping' },
+          { text: 'TV Source', link: '/features/tv-source' },
           { text: 'Settings', link: '/features/settings' },
         ],
       },

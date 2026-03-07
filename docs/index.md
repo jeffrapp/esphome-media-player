@@ -40,7 +40,7 @@ If your speaker has a "TV" source (e.g. a home theater setup), the controller ca
 - **Idle state** — when the TV player is idle, off, or on standby, the screen displays "TV" on a black background with playback controls hidden. Controls reappear when the TV player starts playing again.
 - **Routed controls** — play/pause, next, and previous are automatically sent to whichever player is active (music or TV).
 
-To enable this, set the optional **Sonos Tv Source** field in the device's configuration to the entity ID of your TV media player (e.g. `media_player.apple_tv`). Leave it empty to disable. See [Settings](/features/settings#tv-source-optional) for details.
+To enable this, set the optional **Sonos Tv Source** field in the device's configuration to the entity ID of your TV media player (e.g. `media_player.apple_tv`). Leave it empty to disable. See [TV Source](/features/tv-source) for setup instructions and compatibility.
 
 ### Speaker grouping
 
