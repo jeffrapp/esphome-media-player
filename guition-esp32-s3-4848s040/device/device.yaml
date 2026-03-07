@@ -257,6 +257,8 @@ touchscreen:
           id(touch_x_end) = touch.x;
           id(touch_y_end) = touch.y;
       - script.execute: backlight_wake_timeout
+      - lambda: |-
+          if (id(is_panel_open)) id(start_speaker_panel_timeout).execute();
     on_update:
       - lambda: |-
           for (auto touch: touches) {
@@ -443,11 +445,26 @@ script:
           then:
             - script.execute: show_fallback_speaker
       - lvgl.widget.show: settings_panel
+      - script.execute: start_speaker_panel_timeout
   - id: close_settings_panel
     mode: single
     then:
+      - script.stop: start_speaker_panel_timeout
       - lvgl.widget.hide: settings_panel
       - lambda: 'id(is_panel_open) = false;'
+  - id: start_speaker_panel_timeout
+    mode: restart
+    then:
+      - if:
+          condition:
+            lambda: 'return id(speaker_panel_timeout).state > 0;'
+          then:
+            - delay: !lambda 'return (uint32_t)(id(speaker_panel_timeout).state * 1000);'
+            - if:
+                condition:
+                  lambda: 'return id(is_panel_open);'
+                then:
+                  - script.execute: close_settings_panel
 
   # -- Reset to now-playing view (e.g. when a new track starts) --
   - id: show_track_view
