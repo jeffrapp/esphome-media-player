@@ -159,8 +159,6 @@ script:
           ESP_LOGI("speaker_group", "Discovered %d speakers", count);
 
           if (count > 1) {
-            lv_label_set_text(id(speakers_title_label), "Speakers");
-            lv_obj_clear_flag(id(speakers_title_label), LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(speakers_close_button), LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(group_vol_card), LV_OBJ_FLAG_HIDDEN);
