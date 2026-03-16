@@ -55,6 +55,7 @@ text:
   - platform: template
     id: tv_media_player_entity
     internal: true
+    mode: text
     optimistic: true
     restore_value: true
     initial_value: ""
