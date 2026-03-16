@@ -274,8 +274,7 @@ text_sensor:
       - if:
           condition:
             lambda: |-
-              return (x == "TV" || x == "Line In") && !id(is_tv_mode)
-                  && !id(linked_media_player_entity).state.empty();
+              return (x == "TV" || x == "Line In") && !id(is_tv_mode);
           then:
             - script.execute: enter_tv_mode
       - if:
