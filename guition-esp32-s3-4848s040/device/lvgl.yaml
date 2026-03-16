@@ -2516,11 +2516,11 @@ lvgl:
               - button:
                   id: speakers_close_button
                   align: top_right
-                  x: -5
-                  y: 10
-                  width: 56px
-                  height: 56px
-                  radius: 28
+                  x: -12
+                  y: 16
+                  width: 64px
+                  height: 64px
+                  radius: 32
                   bg_color: 0x333333
                   bg_opa: 100%
                   border_width: 0
