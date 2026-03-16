@@ -1,10 +1,10 @@
 # =============================================================================
-# TV SENSORS - Secondary media player for TV source mode
+# LINKED SENSORS - Secondary media player for TV / Line In source mode
 # =============================================================================
 # Template sensors receive state from dynamic subscriptions managed by
-# subscribe_tv_media_player in media_player_select.yaml. Updates LVGL widgets
-# when is_tv_mode is true. Mirrors the structure of sensors.yaml but reads
-# from the TV entity (e.g. Apple TV) instead of the primary media player.
+# subscribe_linked_media_player in media_player_select.yaml. Updates LVGL
+# widgets when is_tv_mode is true. Mirrors the structure of sensors.yaml but
+# reads from the linked entity (e.g. Apple TV) instead of the primary player.
 # =============================================================================
 
 globals:
@@ -32,12 +32,6 @@ text_sensor:
           condition:
             lambda: 'return id(is_tv_mode);'
           then:
-            - if:
-                condition:
-                  lambda: 'return id(track_info_duration).state > 0;'
-                then:
-                  - script.execute: show_track_view
-                  - script.stop: start_hide_track_info_timer
             - lvgl.widget.hide: artwork_error_label
             - lvgl.label.update:
                 id: media_title_label
@@ -120,17 +114,15 @@ text_sensor:
                 condition:
                   lambda: |-
                     return id(media_source_sensor).has_state()
-                        && id(media_source_sensor).state == "TV";
+                        && (id(media_source_sensor).state == "TV" || id(media_source_sensor).state == "Line In");
                 then:
                   - lambda: |-
                       id(is_tv_idle) = true;
-                      lv_obj_set_style_bg_color(id(track_info_overlay), lv_color_make(0, 0, 0), 0);
+                      lv_obj_set_style_bg_color(id(accent_bg_panel), lv_color_make(0, 0, 0), 0);
                       lv_obj_set_style_bg_color(id(artwork_bg_panel), lv_color_make(0, 0, 0), 0);
-                  - script.stop: start_hide_track_info_timer
-                  - script.execute: show_track_view
                   - lvgl.label.update:
                       id: media_title_label
-                      text: "TV"
+                      text: !lambda 'return id(media_source_sensor).state;'
                   - lambda: 'id(artist_has_content) = false;'
                   - lvgl.widget.hide: media_artist_label
                   - lvgl.widget.hide: media_play_pause_button
@@ -145,8 +137,8 @@ text_sensor:
             lambda: |-
               return !id(is_tv_mode) && x == "playing"
                   && id(media_source_sensor).has_state()
-                  && id(media_source_sensor).state == "TV"
-                  && !id(tv_media_player_entity).state.empty();
+                  && (id(media_source_sensor).state == "TV" || id(media_source_sensor).state == "Line In")
+                  && !id(linked_media_player_entity).state.empty();
           then:
             - script.execute: enter_tv_mode
       - if:
@@ -180,13 +172,11 @@ text_sensor:
                       then:
                         - lambda: 'id(is_screen_dimmed) = false;'
                         - script.execute: show_track_view
-                  - script.execute: start_hide_track_info_timer
                 else:
                   - if:
                       condition:
                         lambda: 'return !id(is_tv_idle);'
                       then:
-                        - script.stop: start_hide_track_info_timer
                         - script.execute: show_track_view
                         - lvgl.widget.show:
                             id: media_play_icon

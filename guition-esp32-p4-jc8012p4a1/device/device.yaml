@@ -74,7 +74,7 @@ api:
         }
     - lvgl.widget.hide: ha_setup_prompt
     - script.execute: subscribe_media_player
-    - script.execute: subscribe_tv_media_player
+    - script.execute: subscribe_linked_media_player
   on_client_disconnected:
     - lvgl.widget.hide: setup_prompt
     - if:
@@ -243,7 +243,7 @@ touchscreen:
           if (abs(dx) > 80 && abs(dx) > abs(dy) * 2) {
             bool can_skip = false;
             if (id(is_tv_mode)) {
-              std::string e = id(tv_media_player_entity).state;
+              std::string e = id(linked_media_player_entity).state;
               can_skip = !e.empty() && id(tv_media_player_state_sensor).has_state();
               if (can_skip) {
                 std::string s = id(tv_media_player_state_sensor).state;
@@ -279,7 +279,7 @@ script:
           service: media_player.media_next_track
           variables:
             target: !lambda |-
-              return id(is_tv_mode) ? id(tv_media_player_entity).state : id(media_player_entity).state;
+              return id(is_tv_mode) ? id(linked_media_player_entity).state : id(media_player_entity).state;
           data_template:
             entity_id: "{{ target }}"
           on_error:
@@ -295,7 +295,7 @@ script:
           service: media_player.media_previous_track
           variables:
             target: !lambda |-
-              return id(is_tv_mode) ? id(tv_media_player_entity).state : id(media_player_entity).state;
+              return id(is_tv_mode) ? id(linked_media_player_entity).state : id(media_player_entity).state;
           data_template:
             entity_id: "{{ target }}"
           on_error:
@@ -352,26 +352,12 @@ script:
       - lambda: |-
           id(is_tv_mode) = true;
           id(is_tv_idle) = false;
+          id(last_tv_artwork_url) = "";
       - lvgl.label.update:
           id: media_title_label
-          text: !lambda |-
-            return id(tv_media_title_sensor).has_state() && !id(tv_media_title_sensor).state.empty()
-                ? id(tv_media_title_sensor).state : std::string("\xe2\x80\x94");
-      - if:
-          condition:
-            lambda: |-
-              return id(tv_media_artist_sensor).has_state()
-                  && !id(tv_media_artist_sensor).state.empty()
-                  && id(tv_media_artist_sensor).state != "\xe2\x80\x94";
-          then:
-            - lambda: 'id(artist_has_content) = true;'
-            - lvgl.label.update:
-                id: media_artist_label
-                text: !lambda 'return id(tv_media_artist_sensor).state;'
-            - lvgl.widget.show: media_artist_label
-          else:
-            - lambda: 'id(artist_has_content) = false;'
-            - lvgl.widget.hide: media_artist_label
+          text: !lambda 'return id(media_source_sensor).state;'
+      - lambda: 'id(artist_has_content) = false;'
+      - lvgl.widget.hide: media_artist_label
       - if:
           condition:
             lambda: |-
@@ -385,26 +371,19 @@ script:
             - lvgl.widget.hide: media_pause_icon
       - lvgl.image.update:
           id: album_art_background_widget
-          src: tv_art_background
+          src: album_art_placeholder
       - lvgl.widget.update:
           id: album_art_background_widget
-          opa: 100%
+          opa: 50%
       - lvgl.widget.hide: artwork_error_label
-      - if:
-          condition:
-            lambda: |-
-              return id(tv_entity_picture_sensor).has_state()
-                  && !id(tv_entity_picture_sensor).state.empty();
-          then:
-            - lambda: |-
-                std::string path = id(tv_entity_picture_sensor).state;
-                while (!path.empty() && (path.back() == '\n' || path.back() == '\r' || path.back() == ' ')) path.pop_back();
-                id(last_tv_artwork_url) = (path.substr(0, 7) == "http://" || path.substr(0, 8) == "https://") ? path : (id(ha_base_url) + path);
-            - online_image.set_url:
-                id: tv_art_background
-                url: !lambda 'return id(last_tv_artwork_url);'
+      - lvgl.bar.update:
+          id: media_progress_bar
+          value: 0
+      - lvgl.label.update:
+          id: media_time_label
+          text: "0:00"
       - script.execute: show_track_view
-      - logger.log: "TV: entered TV mode"
+      - logger.log: "Entered linked media player mode"
 
   - id: exit_tv_mode
     mode: single
@@ -470,7 +449,7 @@ script:
                 id: album_art_background
                 url: !lambda 'return id(last_artwork_url);'
       - script.execute: show_track_view
-      - logger.log: "TV: exited TV mode"
+      - logger.log: "Exited linked media player mode"
 
 
 

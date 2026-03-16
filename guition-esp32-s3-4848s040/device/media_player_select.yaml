@@ -54,23 +54,23 @@ text:
             - lambda: 'App.safe_reboot();'
 
   - platform: template
-    name: "Sonos Tv Source"
-    id: tv_media_player_entity
+    name: "Linked Media Player"
+    id: linked_media_player_entity
     entity_category: config
-    icon: "mdi:television"
+    icon: "mdi:link-variant"
     mode: text
     optimistic: true
     restore_value: true
-    initial_value: "${tv_media_player}"
+    initial_value: "${linked_media_player}"
     min_length: 0
     max_length: 100
     on_value:
-      - script.execute: subscribe_tv_media_player
+      - script.execute: subscribe_linked_media_player
       - delay: 500ms
       - if:
           condition:
             lambda: |-
-              std::string entity = id(tv_media_player_entity).state;
+              std::string entity = id(linked_media_player_entity).state;
               return !entity.empty()
                   && entity.substr(0, 13) == "media_player."
                   && esphome::api::global_api_server != nullptr
@@ -79,7 +79,7 @@ text:
             - logger.log:
                 level: INFO
                 tag: media_select
-                format: "Rebooting to apply new TV media player subscription"
+                format: "Rebooting to apply new linked media player subscription"
             - delay: 200ms
             - lambda: 'App.safe_reboot();'
 
@@ -178,17 +178,17 @@ script:
             id(device_has_been_setup) = true;
           }
 
-  - id: subscribe_tv_media_player
+  - id: subscribe_linked_media_player
     mode: restart
     then:
       - lambda: |-
           if (esphome::api::global_api_server == nullptr) return;
 
-          std::string entity = id(tv_media_player_entity).state;
+          std::string entity = id(linked_media_player_entity).state;
           if (entity.empty()) return;
 
           if (entity.substr(0, 13) != "media_player.") {
-            ESP_LOGW("media_select", "Invalid TV entity '%s' — must start with 'media_player.'", entity.c_str());
+            ESP_LOGW("media_select", "Invalid linked entity '%s' — must start with 'media_player.'", entity.c_str());
             return;
           }
 
@@ -235,4 +235,4 @@ script:
           sub_num("media_duration", id(tv_media_duration_sensor));
           sub_num("media_position", id(tv_media_position_sensor));
 
-          ESP_LOGI("media_select", "Subscribed to TV player '%s'", entity.c_str());
+          ESP_LOGI("media_select", "Subscribed to linked player '%s'", entity.c_str());

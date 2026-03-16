@@ -33,15 +33,15 @@ Full-screen album art is loaded from your Home Assistant instance. When a new tr
 
 The screen shows song title, artist, elapsed and remaining time, and a progress bar. The bar updates every second with smooth interpolation between position updates from Home Assistant. Tap the time label to toggle between elapsed/remaining and elapsed/total duration display. The default mode is set by the **Playback: Show Remaining Time** switch in [Settings](/features/settings).
 
-### TV source mode (optional)
+### Linked media player (optional)
 
-If your speaker has a "TV" source (e.g. a home theater setup), the controller can optionally show now-playing info from the TV's media player (e.g. Apple TV, Chromecast) when the speaker's source changes to "TV". This feature is entirely optional and the controller works without it.
+If your speaker has a secondary input — either a **TV source** (soundbars with HDMI) or a **Line In source** (speakers/amps with a 3.5mm/RCA input) — the controller can show now-playing info from the media player connected to that input (e.g. Apple TV, Chromecast). This feature is entirely optional and the controller works without it.
 
-- **Automatic switching** — when the primary media player's source becomes "TV", the UI shows title, artist, artwork, and progress from the secondary TV media player. When the source changes back, the UI reverts to the primary player.
-- **Idle state** — when the TV player is idle, off, or on standby, the screen displays "TV" on a black background with playback controls hidden. Controls reappear when the TV player starts playing again.
-- **Routed controls** — play/pause, next, and previous are automatically sent to whichever player is active (music or TV).
+- **Automatic switching** — when the primary media player's source becomes "TV" or "Line In", the UI shows title, artist, artwork, and progress from the linked media player. When the source changes back, the UI reverts to the primary player.
+- **Idle state** — when the linked player is idle, off, or on standby, the screen displays the source name ("TV" or "Line In") on a black background with playback controls hidden. Controls reappear when the linked player starts playing again.
+- **Routed controls** — play/pause, next, and previous are automatically sent to whichever player is active (music or linked).
 
-To enable this, set the optional **Sonos Tv Source** field in the device's configuration to the entity ID of your TV media player (e.g. `media_player.apple_tv`). Leave it empty to disable. See [TV Source](/features/tv-source) for setup instructions and compatibility.
+To enable this, set the optional **Linked Media Player** field in the device's configuration to the entity ID of the media player connected to your input (e.g. `media_player.apple_tv`). Leave it empty to disable. See [Linked Media Player](/features/linked-media-player) for setup instructions and compatibility.
 
 ### Speaker grouping
 
