@@ -8,14 +8,14 @@ If you set `display_rotation` without updating the touch transform values, the s
 
 ## ESP32-S3 4848S040
 
-The 480×480 square display supports all four rotations. At **270°** the controller needs **axis swap** in addition to mirroring (mirrors alone match the image but gestures/taps stay wrong).
+The 480×480 square display supports all four rotations. At **270°** the controller needs **axis swap** plus **both mirrors** so taps and swipes line up with the rotated image.
 
 | `display_rotation` | `touch_swap_xy` | `touch_mirror_x` | `touch_mirror_y` |
 | ------------------- | ---------------- | ----------------- | ----------------- |
 | `"0"` (default)     | `"false"`        | `"false"`         | `"false"`         |
 | `"90"`              | `"false"`        | `"true"`          | `"false"`         |
 | `"180"`             | `"false"`        | `"true"`          | `"true"`          |
-| `"270"`             | `"true"`         | `"true"`          | `"false"`         |
+| `"270"`             | `"true"`         | `"true"`          | `"true"`          |
 
 ### Example: 90-degree rotation
 
@@ -26,6 +26,29 @@ substitutions:
   display_rotation: "90"
   touch_mirror_x: "true"
   touch_mirror_y: "false"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+packages:
+  music_dashboard:
+    url: https://github.com/jtenniswood/esphome-media-player
+    files: [guition-esp32-s3-4848s040/packages.yaml]
+    ref: main
+    refresh: 1s
+```
+
+### Example: 270-degree rotation
+
+```yaml
+substitutions:
+  name: "music-dashboard"
+  friendly_name: "Music Dashboard"
+  display_rotation: "270"
+  touch_swap_xy: "true"
+  touch_mirror_x: "true"
+  touch_mirror_y: "true"
 
 wifi:
   ssid: !secret wifi_ssid

@@ -5,7 +5,7 @@ substitutions:
   display_rotation: "270"
   touch_swap_xy: "true"
   touch_mirror_x: "true"
-  touch_mirror_y: "false"
+  touch_mirror_y: "true"
 
 wifi:
   ssid: !secret wifi_ssid
