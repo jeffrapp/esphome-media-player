@@ -12,6 +12,16 @@ Most settings are configurable from the device page in Home Assistant (**Setting
 | **Day/Night: Dim Brightness** | Screen brightness when dimmed (screensaver stage 1). |
 | **Day/Night: Screen Saver** | When enabled, the screen turns off after the screen-off timeout. When disabled, the screen stays at dim brightness instead of turning off. |
 
+## Clock Screensaver
+
+| Setting | Description |
+|---------|-------------|
+| **Clock Screensaver** | When enabled, the idle screen shows a large 24-hour clock (`HH:MM`) on a black background instead of dimming the media UI and turning off. The clock position drifts subtly each minute to prevent burn-in. |
+| **Clock: Active Brightness** | Backlight level when the clock first appears (after the dimming timeout). Default: 20%. |
+| **Clock: Dim Brightness** | Backlight level the clock drops to after the screen-off timeout. The clock stays visible — the screen never turns off. Default: 5%. |
+
+When the clock screensaver is enabled, the **Day/Night: Dim Brightness** and **Day/Night: Screen Saver** settings are bypassed — the clock manages its own two-stage brightness using the settings above. The **Timeout: Dimming** and **Timeout: Screen Off** values still control *when* each stage triggers.
+
 ## Timeouts
 
 | Setting | Description |

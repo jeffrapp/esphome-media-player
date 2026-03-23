@@ -17,7 +17,7 @@ A touchscreen media controller for Home Assistant: album art, track info, and to
 - [Installation](/installation) — flash, connect, and configure your device
 - [Firmware Updates](/features/firmware-updates) — automatic over-the-air updates
 - [Speaker Grouping](/features/speaker-grouping) — multi-room speaker control
-- [Settings](/features/settings) — brightness, timeouts, track info
+- [Settings](/features/settings) — brightness, timeouts, clock screensaver, track info
 - [Manual installation](/advanced/esphome-config) — flash via ESPHome dashboard instead of the web installer
 - [Troubleshooting](/advanced/troubleshooting) — common issues and fixes
 
@@ -68,6 +68,18 @@ When playback is paused, the device uses a two-stage screensaver:
 2. After **Timeout: Screen Off** elapses, the screen turns off (unless disabled by the **Day/Night: Screen Saver** switch, in which case it stays dimmed).
 
 Active brightness (**Day/Night: Active Brightness**) adjusts automatically between day and night based on the `sun.sun` entity in Home Assistant. All of these settings are configurable from the device page in Home Assistant (see [Settings](/features/settings)).
+
+### Clock screensaver
+
+An optional clock screensaver displays the current time in large, thin digits on a black background when the device is idle. Enable it with the **Clock Screensaver** switch in Home Assistant.
+
+When enabled, the clock replaces the normal dim/off screensaver flow:
+
+1. After the dimming timeout, the display switches to a `HH:MM` clock at **Clock: Active Brightness** (default 20%).
+2. After the screen-off timeout, the backlight drops further to **Clock: Dim Brightness** (default 5%).
+3. The screen **never turns off** — the clock is always visible at one of these two levels.
+
+The clock position drifts subtly each minute to prevent screen burn-in. Any touch or new media playback instantly returns to the full-brightness now-playing view.
 
 ## Support This Project
 
