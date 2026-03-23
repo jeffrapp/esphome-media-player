@@ -17,7 +17,7 @@ A touchscreen media controller for Home Assistant: album art, track info, and to
 - [Installation](/installation) — flash, connect, and configure your device
 - [Firmware Updates](/features/firmware-updates) — automatic over-the-air updates
 - [Speaker Grouping](/features/speaker-grouping) — multi-room speaker control
-- [Settings](/features/settings) — brightness, timeouts, clock screensaver, track info
+- [Settings](/features/settings) — brightness, timeouts, screen saver, track info
 - [Manual installation](/advanced/esphome-config) — flash via ESPHome dashboard instead of the web installer
 - [Troubleshooting](/advanced/troubleshooting) — common issues and fixes
 
@@ -71,11 +71,11 @@ When playback is paused, the device uses a two-stage screensaver:
 
 Active brightness (**Day/Night: Active Brightness**) adjusts automatically between day and night based on the `sun.sun` entity in Home Assistant. All of these settings are configurable from the device page in Home Assistant (see [Settings](/features/settings)).
 
-### Clock screensaver
+### Clock screen saver
 
-An optional clock screensaver displays the current time in large, thin digits on a black background when the device is idle. Enable it with the **Screen Saver: Clock** switch in Home Assistant.
+An optional clock screen saver displays the current time in large, thin digits on a black background when the device is idle. Enable it with the **Screen Saver: Clock** switch in Home Assistant.
 
-When enabled, the clock replaces the screen-off stage of the screensaver flow. After the screen dims and the **Screen Saver: Timer** elapses, the display switches to a `HH:MM` clock at **Screen Saver: Clock Brightness** (default 35%). The screen **never turns off** — the clock stays visible.
+When enabled, the clock replaces the screen-off stage of the screen saver flow. After the screen dims and the **Screen Saver: Timer** elapses, the display switches to a `HH:MM` clock at **Screen Saver: Clock Brightness** (default 35%). The screen **never turns off** — the clock stays visible.
 
 The clock position drifts subtly each minute to prevent screen burn-in. Any touch or new media playback instantly returns to the full-brightness now-playing view.
 
