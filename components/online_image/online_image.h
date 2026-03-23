@@ -204,6 +204,8 @@ class OnlineImage : public PollingComponent,
   std::string last_modified_ = "";
 
   time_t start_time_;
+  uint32_t last_data_millis_{0};
+  static constexpr uint32_t DOWNLOAD_STALL_TIMEOUT_MS = 10000;
 
   friend bool ImageDecoder::set_size(int width, int height);
   friend void ImageDecoder::draw(int x, int y, int w, int h, const Color &color);

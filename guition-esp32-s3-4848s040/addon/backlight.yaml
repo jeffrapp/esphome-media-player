@@ -3,7 +3,7 @@
 # =============================================================================
 # Two-stage screensaver with day/night awareness:
 #   1. After dim_timeout seconds of inactivity → dim to day or night brightness
-#   2. After a further off_timeout seconds → turn backlight off completely
+#   2. After a further screen_saver_timeout seconds → show clock or turn off
 #   Any touch or media-stop event restarts the cycle at 100%.
 #
 # All settings (brightness levels, timeouts) are exposed to Home Assistant
@@ -135,7 +135,7 @@ number:
     entity_category: config
 
   - platform: template
-    name: "Timeout: Screen Off"
+    name: "Timeout: Screen Saver"
     id: backlight_off_timeout
     min_value: 1
     max_value: 600
@@ -158,19 +158,6 @@ number:
     restore_value: true
     unit_of_measurement: "%"
     icon: "mdi:clock-outline"
-    entity_category: config
-
-  - platform: template
-    name: "Clock: Timeout"
-    id: clock_start_timeout
-    min_value: 1
-    max_value: 300
-    step: 1
-    initial_value: 300
-    optimistic: true
-    restore_value: true
-    unit_of_measurement: "s"
-    icon: "mdi:clock-start"
     entity_category: config
 
 
@@ -215,11 +202,11 @@ switch:
 #
 # Flow:
 #   1. Wake: hide clock if showing, restore active brightness, resume LVGL
-#   2. Wait clock_start_timeout (clock) or dim_timeout (no clock) seconds
-#   3. If media is NOT playing:
+#   2. Wait dim_timeout seconds → dim to day/night brightness
+#   3. Wait screen_saver_timeout seconds
+#   4. If media is NOT playing:
 #      a. Clock enabled → show clock at clock brightness
-#      b. Clock disabled → dim to day/night brightness,
-#         then optionally turn off after off_timeout
+#      b. Clock disabled & screen saver switch on → turn off screen
 # -----------------------------------------------------------------------------
 script:
   - id: backlight_wake_timeout
@@ -245,11 +232,7 @@ script:
           then:
             - script.execute: hide_clock_view
             - script.execute: show_track_view
-      - delay: !lambda |-
-          float t = id(clock_screensaver_enabled).state
-            ? id(clock_start_timeout).state
-            : id(backlight_dim_timeout).state;
-          return (uint32_t)(t * 1000);
+      - delay: !lambda 'return (uint32_t)(id(backlight_dim_timeout).state * 1000);'
       - if:
           condition:
             lambda: >-
@@ -257,36 +240,42 @@ script:
                      id(media_player_state_sensor).state != "playing";
           then:
             - lambda: 'id(is_screen_dimmed) = true;'
+            - light.turn_on:
+                id: backlight
+                brightness: !lambda |-
+                  bool is_day = id(sun_state_sensor).has_state() &&
+                                id(sun_state_sensor).state == "above_horizon";
+                  float pct = is_day
+                    ? id(backlight_day_brightness).state
+                    : id(backlight_night_brightness).state;
+                  return pct / 100.0f;
+                transition_length: 3s
+            - delay: !lambda 'return (uint32_t)(id(backlight_off_timeout).state * 1000);'
             - if:
                 condition:
-                  lambda: 'return id(clock_screensaver_enabled).state;'
+                  lambda: >-
+                    return !id(media_player_state_sensor).has_state() ||
+                           id(media_player_state_sensor).state != "playing";
                 then:
-                  - script.execute: show_clock_view
-                else:
-                  - light.turn_on:
-                      id: backlight
-                      brightness: !lambda |-
-                        bool is_day = id(sun_state_sensor).has_state() &&
-                                      id(sun_state_sensor).state == "above_horizon";
-                        float pct = is_day
-                          ? id(backlight_day_brightness).state
-                          : id(backlight_night_brightness).state;
-                        return pct / 100.0f;
-                      transition_length: 3s
                   - if:
                       condition:
-                        lambda: |-
-                          bool is_day = id(sun_state_sensor).has_state() &&
-                                        id(sun_state_sensor).state == "above_horizon";
-                          return is_day
-                            ? id(backlight_day_screen_off).state
-                            : id(backlight_night_screen_off).state;
+                        lambda: 'return id(clock_screensaver_enabled).state;'
                       then:
-                        - delay: !lambda 'return (uint32_t)(id(backlight_off_timeout).state * 1000);'
-                        - light.turn_off:
-                            id: backlight
-                            transition_length: 3s
-                        - lvgl.pause:
+                        - script.execute: show_clock_view
+                      else:
+                        - if:
+                            condition:
+                              lambda: |-
+                                bool is_day = id(sun_state_sensor).has_state() &&
+                                              id(sun_state_sensor).state == "above_horizon";
+                                return is_day
+                                  ? id(backlight_day_screen_off).state
+                                  : id(backlight_night_screen_off).state;
+                            then:
+                              - light.turn_off:
+                                  id: backlight
+                                  transition_length: 3s
+                              - lvgl.pause:
 
   - id: show_clock_view
     mode: single

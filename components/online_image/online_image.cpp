@@ -206,10 +206,10 @@ void OnlineImage::update() {
   ImageFormat resolved = this->detect_format_();
 
   if (resolved == ImageFormat::AUTO) {
-    // Content-Type didn't identify the format; defer to loop() for magic-byte detection
     ESP_LOGD(TAG, "Image format not identified from Content-Type, deferring to magic-byte detection");
     this->data_start_ = nullptr;
     this->start_time_ = ::time(nullptr);
+    this->last_data_millis_ = millis();
     this->enable_loop();
     return;
   }
@@ -222,6 +222,7 @@ void OnlineImage::update() {
   this->data_start_ = nullptr;
   ESP_LOGI(TAG, "Downloading image (Size: %zu)", total_size);
   this->start_time_ = ::time(nullptr);
+  this->last_data_millis_ = millis();
   this->enable_loop();
 }
 
@@ -239,10 +240,16 @@ void OnlineImage::loop() {
       auto len = this->downloader_->read(this->download_buffer_.append(), available);
       if (len > 0) {
         this->download_buffer_.write(len);
+        this->last_data_millis_ = millis();
       }
     }
 
     if (this->download_buffer_.unread() < 4) {
+      if (millis() - this->last_data_millis_ > DOWNLOAD_STALL_TIMEOUT_MS) {
+        ESP_LOGE(TAG, "Download stalled waiting for format detection bytes");
+        this->end_connection_();
+        this->download_error_callback_.call();
+      }
       return;
     }
 
@@ -299,13 +306,11 @@ void OnlineImage::loop() {
   }
   size_t available = this->download_buffer_.free_capacity();
   if (available) {
-    // Some decoders need to fully download the image before downloading.
-    // In case of huge images, don't wait blocking until the whole image has been downloaded,
-    // use smaller chunks
     available = std::min(available, this->download_buffer_initial_size_);
     auto len = this->downloader_->read(this->download_buffer_.append(), available);
     if (len > 0) {
       this->download_buffer_.write(len);
+      this->last_data_millis_ = millis();
       auto fed = this->decoder_->decode(this->download_buffer_.data(), this->download_buffer_.unread());
       if (fed < 0) {
         ESP_LOGE(TAG, "Error when decoding image.");
@@ -314,6 +319,12 @@ void OnlineImage::loop() {
         return;
       }
       this->download_buffer_.read(fed);
+    } else if (millis() - this->last_data_millis_ > DOWNLOAD_STALL_TIMEOUT_MS) {
+      ESP_LOGE(TAG, "Download stalled: no data received for %" PRIu32 "ms (buffered %zu bytes)",
+               DOWNLOAD_STALL_TIMEOUT_MS, this->download_buffer_.unread());
+      this->end_connection_();
+      this->download_error_callback_.call();
+      return;
     }
   }
 }

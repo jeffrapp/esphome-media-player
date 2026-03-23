@@ -95,19 +95,24 @@ size_t DownloadBuffer::read(size_t len) {
 
 size_t DownloadBuffer::resize(size_t size) {
   if (this->size_ >= size) {
-    // Avoid useless reallocations; if the buffer is big enough, don't reallocate.
     return this->size_;
   }
-  this->allocator_.deallocate(this->buffer_, this->size_);
-  this->buffer_ = this->allocator_.allocate(size);
-  this->reset();
-  if (this->buffer_) {
+  uint8_t *new_buffer = this->allocator_.allocate(size);
+  if (new_buffer) {
+    if (this->buffer_ && this->unread_ > 0) {
+      memcpy(new_buffer, this->buffer_, this->unread_);
+    }
+    this->allocator_.deallocate(this->buffer_, this->size_);
+    this->buffer_ = new_buffer;
     this->size_ = size;
     return size;
   } else {
     ESP_LOGE(TAG, "allocation of %zu bytes failed. Biggest block in heap: %zu Bytes", size,
              this->allocator_.get_max_free_block_size());
+    this->allocator_.deallocate(this->buffer_, this->size_);
+    this->buffer_ = nullptr;
     this->size_ = 0;
+    this->reset();
     return 0;
   }
 }

@@ -10,24 +10,21 @@ Most settings are configurable from the device page in Home Assistant (**Setting
 |---------|-------------|
 | **Day/Night: Active Brightness** | Screen brightness during active use. Automatically adjusts between day and night values based on the `sun.sun` entity in Home Assistant. |
 | **Day/Night: Dim Brightness** | Screen brightness when dimmed (screensaver stage 1). |
-| **Day/Night: Screen Saver** | When enabled, the screen turns off after the screen-off timeout. When disabled, the screen stays at dim brightness instead of turning off. |
+| **Day/Night: Screen Saver** | When enabled, the screen turns off after the **Timeout: Screen Saver** elapses (unless the clock screensaver is active). When disabled, the screen stays at dim brightness instead of turning off. |
 
 ## Clock Screensaver
 
 | Setting | Description |
 |---------|-------------|
-| **Clock Screensaver** | When enabled, the idle screen shows a large 24-hour clock (`HH:MM`) on a black background instead of dimming the media UI and turning off. The clock position drifts subtly each minute to prevent burn-in. |
+| **Clock Screensaver** | When enabled, the clock screensaver replaces the screen-off stage: after the screen dims and the **Timeout: Screen Saver** elapses, a large 24-hour clock (`HH:MM`) is shown on a black background instead of turning the screen off. The clock position drifts subtly each minute to prevent burn-in. |
 | **Clock: Brightness** | Backlight level for the clock screensaver. Default: 35%. |
-| **Clock: Timeout** | Time after playback pauses before the clock screensaver appears. Default: 10 seconds. |
-
-When the clock screensaver is enabled, the **Day/Night: Dim Brightness** and **Day/Night: Screen Saver** settings are bypassed — the clock uses its own brightness and timeout settings above.
 
 ## Timeouts
 
 | Setting | Description |
 |---------|-------------|
 | **Timeout: Dimming** | Time after playback pauses before the screen dims to the dim brightness level. |
-| **Timeout: Screen Off** | Time after dimming before the screen turns off completely (if screen saver is enabled). |
+| **Timeout: Screen Saver** | Time after dimming before the screen saver activates. If the clock screensaver is enabled, the clock is shown. Otherwise, the screen turns off (if the **Day/Night: Screen Saver** switch is on). |
 
 ## Speakers
 
