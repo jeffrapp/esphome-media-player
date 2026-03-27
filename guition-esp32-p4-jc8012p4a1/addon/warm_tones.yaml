@@ -1,8 +1,9 @@
 # =============================================================================
-# WARM TONES - Screen color temperature slider
+# WARM TONES - Day/night screen color temperature
 # =============================================================================
 # Shifts album art toward warm tones (reduced blue, slight red boost).
-# Controlled via a 0–100% slider exposed to Home Assistant.
+# Separate day and night warmth sliders follow the same sun/sensor-based
+# day/night detection used by the backlight brightness system.
 #
 # The tint is applied directly to the RGB565 image buffer after accent color
 # extraction, using precomputed lookup tables for speed. The undo/redo
@@ -23,20 +24,37 @@ globals:
 
 
 # -----------------------------------------------------------------------------
-# HA slider: Screen Warmth (0–100%)
+# HA sliders: Day / Night warmth (0–100%)
 # -----------------------------------------------------------------------------
 number:
   - platform: template
-    name: "Screen: Warmth"
-    id: screen_warmth
+    name: "Day: Screen Warmth"
+    id: screen_warmth_day
     min_value: 0
     max_value: 100
     step: 5
-    initial_value: 0
+    initial_value: 75
     optimistic: true
     restore_value: true
     unit_of_measurement: "%"
-    icon: "mdi:thermometer"
+    icon: "mdi:white-balance-sunny"
+    entity_category: config
+    on_value:
+      then:
+        - lambda: 'id(warm_tone_retint) = true;'
+        - script.execute: apply_warm_tones
+
+  - platform: template
+    name: "Night: Screen Warmth"
+    id: screen_warmth_night
+    min_value: 0
+    max_value: 100
+    step: 5
+    initial_value: 100
+    optimistic: true
+    restore_value: true
+    unit_of_measurement: "%"
+    icon: "mdi:weather-night"
     entity_category: config
     on_value:
       then:
@@ -55,19 +73,22 @@ script:
           bool retint = id(warm_tone_retint);
           id(warm_tone_retint) = false;
 
-          float w = id(screen_warmth).state / 100.0f;
+          bool is_day = id(day_night_sensor_entity).state.empty()
+              ? (id(sun_state_sensor).has_state() && id(sun_state_sensor).state == "above_horizon")
+              : id(custom_day_night_is_day);
+          float w = (is_day ? id(screen_warmth_day).state : id(screen_warmth_night).state) / 100.0f;
           float last_w = retint ? id(warm_tone_last_w) : 0.0f;
 
           if (fabsf(w - last_w) < 0.01f) return;
 
           ESP_LOGI("warm", "Warmth: %d%% -> %d%%", (int)(last_w * 100.0f + 0.5f), (int)(w * 100.0f + 0.5f));
 
-          float r_undo = (last_w > 0.005f) ? 1.0f / (1.0f + last_w * 0.06f) : 1.0f;
-          float g_undo = (last_w > 0.005f) ? 1.0f / (1.0f - last_w * 0.07f) : 1.0f;
-          float b_undo = (last_w > 0.005f) ? 1.0f / (1.0f - last_w * 0.28f) : 1.0f;
-          float r_apply = 1.0f + w * 0.06f;
-          float g_apply = 1.0f - w * 0.07f;
-          float b_apply = 1.0f - w * 0.28f;
+          float r_undo = (last_w > 0.005f) ? 1.0f / (1.0f + last_w * 0.12f) : 1.0f;
+          float g_undo = (last_w > 0.005f) ? 1.0f / (1.0f - last_w * 0.14f) : 1.0f;
+          float b_undo = (last_w > 0.005f) ? 1.0f / (1.0f - last_w * 0.45f) : 1.0f;
+          float r_apply = 1.0f + w * 0.12f;
+          float g_apply = 1.0f - w * 0.14f;
+          float b_apply = 1.0f - w * 0.45f;
 
           uint8_t r_lut[32], g_lut[64], b_lut[32];
           for (int i = 0; i < 32; i++) {
