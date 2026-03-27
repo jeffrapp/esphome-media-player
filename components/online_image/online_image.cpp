@@ -58,6 +58,10 @@ void OnlineImage::draw(int x, int y, display::Display *display, Color color_on, 
 }
 
 void OnlineImage::release() {
+  if (this->prev_buffer_) {
+    this->allocator_.deallocate(this->prev_buffer_, this->prev_buffer_size_);
+    this->prev_buffer_ = nullptr;
+  }
   if (this->buffer_) {
     ESP_LOGV(TAG, "Deallocating old buffer");
     this->allocator_.deallocate(this->buffer_, this->get_buffer_size_());
@@ -100,29 +104,37 @@ size_t OnlineImage::resize_(int width_in, int height_in) {
     }
   }
   size_t new_size = this->get_buffer_size_(width, height);
-  if (this->buffer_) {
-    if (new_size <= this->get_buffer_size_()) {
-      this->buffer_width_ = width;
-      this->buffer_height_ = height;
-      this->width_ = width;
-      return new_size;
-    }
+
+  if (this->prev_buffer_ && this->buffer_) {
+    this->allocator_.deallocate(this->buffer_, this->get_buffer_size_());
+    this->buffer_ = nullptr;
+  }
+
+  if (this->buffer_ && this->data_start_) {
+    this->prev_buffer_ = this->buffer_;
+    this->prev_buffer_size_ = this->get_buffer_size_();
+    this->buffer_ = nullptr;
+  } else if (this->buffer_) {
     this->allocator_.deallocate(this->buffer_, this->get_buffer_size_());
     this->buffer_ = nullptr;
     this->data_start_ = nullptr;
   }
+
   ESP_LOGD(TAG, "Allocating new buffer of %zu bytes", new_size);
   this->buffer_ = this->allocator_.allocate(new_size);
   if (this->buffer_ == nullptr) {
     ESP_LOGE(TAG, "allocation of %zu bytes failed. Biggest block in heap: %zu Bytes", new_size,
              this->allocator_.get_max_free_block_size());
+    if (this->prev_buffer_) {
+      this->buffer_ = this->prev_buffer_;
+      this->prev_buffer_ = nullptr;
+    }
     this->end_connection_();
     return 0;
   }
   this->buffer_width_ = width;
   this->buffer_height_ = height;
   this->width_ = width;
-  ESP_LOGV(TAG, "New size: (%d, %d)", width, height);
   return new_size;
 }
 
@@ -282,6 +294,10 @@ void OnlineImage::loop() {
   }
 
   if (!this->downloader_ || this->decoder_->is_finished()) {
+    if (this->prev_buffer_) {
+      this->allocator_.deallocate(this->prev_buffer_, this->prev_buffer_size_);
+      this->prev_buffer_ = nullptr;
+    }
     this->data_start_ = buffer_;
     this->width_ = buffer_width_;
     this->height_ = buffer_height_;

@@ -153,6 +153,8 @@ class OnlineImage : public PollingComponent,
   std::unique_ptr<ImageDecoder> decoder_{nullptr};
 
   uint8_t *buffer_;
+  uint8_t *prev_buffer_{nullptr};
+  size_t prev_buffer_size_{0};
   DownloadBuffer download_buffer_;
   /**
    * This is the *initial* size of the download buffer, not the current size.
