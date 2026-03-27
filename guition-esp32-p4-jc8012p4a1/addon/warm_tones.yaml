@@ -33,7 +33,7 @@ number:
     min_value: 0
     max_value: 100
     step: 5
-    initial_value: 75
+    initial_value: 30
     optimistic: true
     restore_value: true
     unit_of_measurement: "%"
@@ -50,7 +50,7 @@ number:
     min_value: 0
     max_value: 100
     step: 5
-    initial_value: 100
+    initial_value: 60
     optimistic: true
     restore_value: true
     unit_of_measurement: "%"
