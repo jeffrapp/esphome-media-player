@@ -102,9 +102,6 @@ size_t OnlineImage::resize_(int width_in, int height_in) {
   size_t new_size = this->get_buffer_size_(width, height);
   if (this->buffer_) {
     if (new_size <= this->get_buffer_size_()) {
-      if (width != this->buffer_width_ || height != this->buffer_height_) {
-        memset(this->buffer_, 0, this->get_buffer_size_());
-      }
       this->buffer_width_ = width;
       this->buffer_height_ = height;
       this->width_ = width;
