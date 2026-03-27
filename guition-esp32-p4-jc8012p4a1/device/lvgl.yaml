@@ -102,7 +102,7 @@ lvgl:
                   max_height: 506px
                   long_mode: wrap
                   text_font: roboto_light88_font
-                  text_color: 0xFFFFFF
+                  text_color: 0xFFF5E0
                   text_align: left
                   text_line_space: 0
               - label:
@@ -112,7 +112,7 @@ lvgl:
                   width: 100%
                   long_mode: wrap
                   text_font: roboto_light40_font
-                  text_color: 0xFFFFFF
+                  text_color: 0xFFF5E0
                   text_opa: 80%
                   text_align: left
                   hidden: true
@@ -122,7 +122,7 @@ lvgl:
                   pad_top: 12
                   width: 100%
                   text_font: roboto20_font
-                  text_color: 0xFFFFFF
+                  text_color: 0xFFF5E0
                   text_opa: 80%
                   text_align: left
                   on_click:
