@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
+import { withBase } from 'vitepress'
 
 const props = defineProps({
   device: { type: String, default: null },
@@ -22,12 +23,7 @@ const containers = ref({})
 const scriptLoaded = ref(false)
 
 function manifestUrl(filename) {
-  const isLocalhost =
-    typeof window !== 'undefined' && window.location?.hostname === 'localhost'
-  const base = isLocalhost
-    ? 'https://jtenniswood.github.io/esphome-media-player/firmware/'
-    : './firmware/'
-  return base + filename
+  return withBase(`/firmware/${filename}`)
 }
 
 function createButton(device, el) {
