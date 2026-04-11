@@ -158,6 +158,10 @@ output:
     zero_means_zero: true
 
 
+spi:
+  clk_pin: GPIO48
+  mosi_pin: GPIO47
+
 
 # -----------------------------------------------------------------------------
 # I2C BUS (Touchscreen Communication)
