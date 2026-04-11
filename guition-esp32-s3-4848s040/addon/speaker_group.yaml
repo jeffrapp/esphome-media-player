@@ -185,11 +185,10 @@ script:
             lv_obj_clear_flag(id(speakers_container), LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(speakers_close_button), LV_OBJ_FLAG_HIDDEN);
             lv_obj_clear_flag(id(group_vol_card), LV_OBJ_FLAG_HIDDEN);
+            id(update_group_state).execute();
           } else {
             id(show_fallback_speaker).execute();
           }
-
-      - script.execute: update_group_state
 
   # ---------------------------------------------------------------------------
   # Fallback: show a single card for the primary media player when the speaker
