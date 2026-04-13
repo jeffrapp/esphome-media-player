@@ -128,7 +128,7 @@ jobs:
           jq '{name: .name, version: .version, home_assistant_domain: .home_assistant_domain, new_install_prompt_erase: .new_install_prompt_erase, builds: [.builds[] | select(.chipFamily == "ESP32-P4")]}' \
             "$MANIFEST" > "${FW}/media-player-jc8012p4a1.manifest.json"
           echo "Created media-player-jc8012p4a1.manifest.json"
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
           retention-days: 1
