@@ -10,12 +10,19 @@ static const char *const TAG = "artwork_image.decoder";
 
 bool ImageDecoder::set_size(int width, int height) {
   bool success = this->image_->resize_(width, height) > 0;
+  if (!success) {
+    this->failed_ = true;
+    return false;
+  }
   this->x_scale_ = static_cast<double>(this->image_->buffer_width_) / width;
   this->y_scale_ = static_cast<double>(this->image_->buffer_height_) / height;
   return success;
 }
 
 void ImageDecoder::draw(int x, int y, int w, int h, const Color &color) {
+  if (this->failed_) {
+    return;
+  }
   auto width = std::min(this->image_->buffer_width_, static_cast<int>(std::ceil((x + w) * this->x_scale_)));
   auto height = std::min(this->image_->buffer_height_, static_cast<int>(std::ceil((y + h) * this->y_scale_)));
   for (int i = x * this->x_scale_; i < width; i++) {
@@ -26,6 +33,9 @@ void ImageDecoder::draw(int x, int y, int w, int h, const Color &color) {
 }
 
 void ImageDecoder::draw_rgb565_block(int x, int y, int w, int h, const uint8_t *data) {
+  if (this->failed_) {
+    return;
+  }
   int bpp_bytes = this->image_->get_bpp() / 8;
 
   if (this->x_scale_ == 1.0 && this->y_scale_ == 1.0 && bpp_bytes == 2) {

@@ -68,6 +68,9 @@ void ArtworkImage::release() {
     this->height_ = 0;
     this->buffer_width_ = 0;
     this->buffer_height_ = 0;
+#ifdef USE_LVGL
+    memset(&this->dsc_, 0, sizeof(this->dsc_));
+#endif
     this->last_modified_ = "";
     this->etag_ = "";
     this->end_connection_();
@@ -106,11 +109,18 @@ size_t ArtworkImage::resize_(int width_in, int height_in) {
       this->buffer_width_ = width;
       this->buffer_height_ = height;
       this->width_ = width;
+      this->height_ = height;
+#ifdef USE_LVGL
+      memset(&this->dsc_, 0, sizeof(this->dsc_));
+#endif
       return new_size;
     }
     this->allocator_.deallocate(this->buffer_, this->get_buffer_size_());
     this->buffer_ = nullptr;
     this->data_start_ = nullptr;
+#ifdef USE_LVGL
+    memset(&this->dsc_, 0, sizeof(this->dsc_));
+#endif
   }
   ESP_LOGD(TAG, "Allocating new buffer of %zu bytes", new_size);
   this->buffer_ = this->allocator_.allocate(new_size);
@@ -123,6 +133,10 @@ size_t ArtworkImage::resize_(int width_in, int height_in) {
   this->buffer_width_ = width;
   this->buffer_height_ = height;
   this->width_ = width;
+  this->height_ = height;
+#ifdef USE_LVGL
+  memset(&this->dsc_, 0, sizeof(this->dsc_));
+#endif
   ESP_LOGV(TAG, "New size: (%d, %d)", width, height);
   return new_size;
 }

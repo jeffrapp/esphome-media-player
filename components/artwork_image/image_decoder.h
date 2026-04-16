@@ -58,6 +58,7 @@ class ImageDecoder {
    * @return true if the image was resized, false otherwise.
    */
   bool set_size(int width, int height);
+  bool has_failed() const { return this->failed_; }
 
   /**
    * @brief Fill a rectangle on the display_buffer using the defined color.
@@ -96,6 +97,7 @@ class ImageDecoder {
   size_t decoded_bytes_ = 0;
   double x_scale_ = 1.0;
   double y_scale_ = 1.0;
+  bool failed_{false};
 };
 
 class DownloadBuffer {

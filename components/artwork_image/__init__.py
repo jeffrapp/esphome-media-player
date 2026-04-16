@@ -27,6 +27,11 @@ from esphome.const import (
 from esphome.core import Lambda
 
 try:
+    from esphome.components.lvgl import defines as lvgl_defines
+except ImportError:
+    lvgl_defines = None
+
+try:
     from esphome.components.image import add_metadata
 except ImportError:
 
@@ -225,6 +230,9 @@ async def artwork_image_action_to_code(config, action_id, template_arg, args):
 async def to_code(config):
     image_format = IMAGE_FORMATS[config[CONF_FORMAT]]
     image_format.actions()
+    if lvgl_defines is not None:
+        lvgl_defines.add_define("LV_DRAW_SW_SUPPORT_RGB565", "1")
+        lvgl_defines.add_define("LV_DRAW_SW_SUPPORT_RGB565A8", "1")
 
     url = config[CONF_URL]
     width, height = config.get(CONF_RESIZE, (0, 0))

@@ -93,6 +93,9 @@ int HOT PngDecoder::decode(uint8_t *buffer, size_t size) {
   auto fed = pngle_feed(this->pngle_, buffer, size);
   if (fed < 0) {
     ESP_LOGE(TAG, "Error decoding image: %s", pngle_error(this->pngle_));
+  } else if (this->has_failed()) {
+    ESP_LOGE(TAG, "PNG decode failed while allocating or sizing the artwork buffer");
+    return DECODE_ERROR_OUT_OF_MEMORY;
   } else {
     this->decoded_bytes_ += fed;
   }

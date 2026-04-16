@@ -78,6 +78,11 @@ int HOT JpegDecoder::decode(uint8_t *buffer, size_t size) {
   ESP_LOGD(TAG, "JPEG header: %dx%d, components=%d, progressive=%s",
            src_w, src_h, cinfo.num_components,
            cinfo.progressive_mode ? "yes" : "no");
+  if (cinfo.progressive_mode) {
+    ESP_LOGE(TAG, "Progressive JPEG artwork detected, but the native progressive decode path is not reliable yet");
+    jpeg_destroy_decompress(&cinfo);
+    return DECODE_ERROR_UNSUPPORTED_FORMAT;
+  }
 
   // Request RGB output regardless of input colorspace
   cinfo.out_color_space = JCS_RGB;
