@@ -258,7 +258,7 @@ touchscreen:
           int gesture_dx = dy;
           int gesture_dy = -dx;
           int gesture_sy = 800 - id(touch_x_start);
-          bool starts_in_top_strip = gesture_sy < 200 && id(touch_y_start) < 1080;
+          bool starts_in_top_strip = id(touch_x_start) > 760 && id(touch_y_start) < 1080;
           bool top_strip_panel_gesture = starts_in_top_strip
               && ((abs(gesture_dx) < 30 && abs(gesture_dy) < 30)
                   || (gesture_dy > 30 && abs(gesture_dy) > abs(gesture_dx) * 2));
