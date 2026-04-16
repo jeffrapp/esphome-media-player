@@ -6,7 +6,6 @@
 # =============================================================================
 
 lvgl:
-  rotation: ${display_rotation}
   buffer_size: 12%
   byte_order: little_endian
   on_boot:
