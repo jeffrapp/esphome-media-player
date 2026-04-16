@@ -229,11 +229,6 @@ touchscreen:
     display: tft_display
     reset_pin: GPIO22
     interrupt_pin: GPIO21
-    # Touch mirror must match display_rotation (90 or 270); see packages.yaml
-    transform:
-      swap_xy: true
-      mirror_x: ${touch_mirror_x}
-      mirror_y: ${touch_mirror_y}
     on_touch:
       - lambda: |-
           id(was_screen_dimmed) = id(is_screen_dimmed);
@@ -572,7 +567,6 @@ display:
     reset_pin: GPIO27
     auto_clear_enabled: false
     color_order: RGB
-    rotation: ${display_rotation}
     dimensions:
       width: 800
       height: 1280

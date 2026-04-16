@@ -504,13 +504,5 @@ bool OnlineImage::validate_url_(const std::string &url) {
   return true;
 }
 
-void OnlineImage::add_on_finished_callback(std::function<void(bool)> &&callback) {
-  this->download_finished_callback_.add(std::move(callback));
-}
-
-void OnlineImage::add_on_error_callback(std::function<void()> &&callback) {
-  this->download_error_callback_.add(std::move(callback));
-}
-
 }  // namespace online_image
 }  // namespace esphome

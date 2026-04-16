@@ -1,21 +1,21 @@
 # Display Rotation
 
-Both devices support display rotation for different mounting orientations (for example to change which side the power cable exits from). Set `display_rotation` and update `touch_swap_xy` / `touch_mirror_x` / `touch_mirror_y` to match.
+Both devices support display rotation for different mounting orientations (for example to change which side the power cable exits from). Set `display_rotation` to rotate both the screen and touch input.
 
 ::: warning
-If you set `display_rotation` without updating the touch transform values, the screen image will be rotated but taps will register in the wrong position.
+ESPHome 2026.4 and newer handle touch rotation through LVGL. Older examples that set `touch_swap_xy`, `touch_mirror_x`, or `touch_mirror_y` are no longer needed.
 :::
 
 ## ESP32-S3 4848S040
 
-The 480×480 square display supports all four rotations. At **90°** and **270°** you need **`touch_swap_xy: "true"`** so horizontal swipes are not read as vertical (otherwise the settings panel / volume strip opens on a left–right swipe). Mirroring differs between 90° and 270°.
+The 480×480 square display supports all four rotations.
 
-| `display_rotation` | `touch_swap_xy` | `touch_mirror_x` | `touch_mirror_y` |
-| ------------------- | ---------------- | ----------------- | ----------------- |
-| `"0"` (default)     | `"false"`        | `"false"`         | `"false"`         |
-| `"90"`              | `"true"`         | `"false"`         | `"true"`          |
-| `"180"`             | `"false"`        | `"true"`          | `"true"`          |
-| `"270"`             | `"true"`         | `"true"`          | `"false"`         |
+| `display_rotation` |
+| ------------------- |
+| `"0"` (default)     |
+| `"90"`              |
+| `"180"`             |
+| `"270"`             |
 
 ### Example: 90-degree rotation
 
@@ -24,9 +24,6 @@ substitutions:
   name: "music-dashboard"
   friendly_name: "Music Dashboard"
   display_rotation: "90"
-  touch_swap_xy: "true"
-  touch_mirror_x: "false"
-  touch_mirror_y: "true"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -47,9 +44,6 @@ substitutions:
   name: "music-dashboard"
   friendly_name: "Music Dashboard"
   display_rotation: "270"
-  touch_swap_xy: "true"
-  touch_mirror_x: "true"
-  touch_mirror_y: "false"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -65,12 +59,12 @@ packages:
 
 ## ESP32-P4 JC8012P4A1
 
-The rectangular display defaults to landscape orientation and supports a 180° flip for alternate mounting. To flip 180°, override `display_rotation` and touch mirrors:
+The rectangular display defaults to landscape orientation and supports a 180° flip for alternate mounting. To flip 180°, override `display_rotation`:
 
-| `display_rotation` | `touch_swap_xy` | `touch_mirror_x` | `touch_mirror_y` |
-| ------------------- | --------------- | ----------------- | ----------------- |
-| `"90"` (default)    | `"true"`        | `"false"`         | `"false"`         |
-| `"270"`             | `"true"`        | `"true"`          | `"true"`          |
+| `display_rotation` |
+| ------------------- |
+| `"90"` (default)    |
+| `"270"`             |
 
 ### Example: 180-degree rotation
 
@@ -79,9 +73,6 @@ substitutions:
   name: "music-dashboard-10inch"
   friendly_name: "Music Dashboard 10inch"
   display_rotation: "270"
-  touch_swap_xy: "true"
-  touch_mirror_x: "true"
-  touch_mirror_y: "true"
 
 wifi:
   ssid: !secret wifi_ssid
@@ -94,4 +85,3 @@ packages:
     ref: main
     refresh: 1s
 ```
-

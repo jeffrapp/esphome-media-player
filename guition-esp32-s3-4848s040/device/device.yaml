@@ -266,11 +266,6 @@ touchscreen:
   - platform: gt911
     id: tft_touch
     display: my_display
-    # Touch transform must match display_rotation (0/90/180/270); see packages.yaml
-    transform:
-      swap_xy: ${touch_swap_xy}
-      mirror_x: ${touch_mirror_x}
-      mirror_y: ${touch_mirror_y}
     on_touch:
       - lambda: |-
           id(was_screen_dimmed) = id(is_screen_dimmed);

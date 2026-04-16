@@ -21,7 +21,6 @@ from esphome.const import (
     CONF_ID,
     CONF_ON_ERROR,
     CONF_RESIZE,
-    CONF_TRIGGER_ID,
     CONF_TYPE,
     CONF_URL,
 )
@@ -139,15 +138,6 @@ ReleaseImageAction = online_image_ns.class_(
     "OnlineImageReleaseAction", automation.Action, cg.Parented.template(OnlineImage)
 )
 
-# Triggers
-DownloadFinishedTrigger = online_image_ns.class_(
-    "DownloadFinishedTrigger", automation.Trigger.template()
-)
-DownloadErrorTrigger = online_image_ns.class_(
-    "DownloadErrorTrigger", automation.Trigger.template()
-)
-
-
 ONLINE_IMAGE_SCHEMA = (
     cv.Schema(
         {
@@ -168,20 +158,8 @@ ONLINE_IMAGE_SCHEMA = (
             ),
             cv.Optional(CONF_PLACEHOLDER): cv.use_id(Image_),
             cv.Optional(CONF_BUFFER_SIZE, default=65536): cv.int_range(256, 524288),
-            cv.Optional(CONF_ON_DOWNLOAD_FINISHED): automation.validate_automation(
-                {
-                    cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(
-                        DownloadFinishedTrigger
-                    ),
-                }
-            ),
-            cv.Optional(CONF_ON_ERROR): automation.validate_automation(
-                {
-                    cv.GenerateID(CONF_TRIGGER_ID): cv.declare_id(
-                        DownloadErrorTrigger
-                    ),
-                }
-            ),
+            cv.Optional(CONF_ON_DOWNLOAD_FINISHED): automation.validate_automation({}),
+            cv.Optional(CONF_ON_ERROR): automation.validate_automation({}),
         }
     )
     .extend(cv.polling_component_schema("never"))
@@ -214,6 +192,14 @@ RELEASE_IMAGE_SCHEMA = automation.maybe_simple_id(
     {
         cv.GenerateID(): cv.use_id(OnlineImage),
     }
+)
+
+
+_CALLBACK_AUTOMATIONS = (
+    automation.CallbackAutomation(
+        CONF_ON_DOWNLOAD_FINISHED, "add_on_finished_callback", [(bool, "cached")]
+    ),
+    automation.CallbackAutomation(CONF_ON_ERROR, "add_on_error_callback"),
 )
 
 
@@ -276,10 +262,4 @@ async def to_code(config):
         placeholder = await cg.get_variable(placeholder_id)
         cg.add(var.set_placeholder(placeholder))
 
-    for conf in config.get(CONF_ON_DOWNLOAD_FINISHED, []):
-        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
-        await automation.build_automation(trigger, [(bool, "cached")], conf)
-
-    for conf in config.get(CONF_ON_ERROR, []):
-        trigger = cg.new_Pvariable(conf[CONF_TRIGGER_ID], var)
-        await automation.build_automation(trigger, [], conf)
+    await automation.build_callback_automations(var, config, _CALLBACK_AUTOMATIONS)
