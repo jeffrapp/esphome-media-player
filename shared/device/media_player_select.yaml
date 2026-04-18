@@ -16,6 +16,12 @@ globals:
   - id: tv_subscription_gen
     type: int
     initial_value: '0'
+  - id: subscribed_media_player_entity
+    type: std::string
+    initial_value: '""'
+  - id: subscribed_linked_media_player_entity
+    type: std::string
+    initial_value: '""'
 
 text:
   - platform: template
@@ -108,13 +114,32 @@ script:
 
           // Empty — show setup prompt, nothing to subscribe to
           if (entity.empty()) {
+            id(subscription_gen) += 1;
+            id(subscribed_media_player_entity) = "";
             lv_obj_clear_flag(id(setup_prompt), LV_OBJ_FLAG_HIDDEN);
             return;
           }
 
           // Basic validation
           if (entity.substr(0, 13) != "media_player.") {
+            id(subscription_gen) += 1;
+            id(subscribed_media_player_entity) = "";
             ESP_LOGW("media_select", "Invalid entity '%s' — must start with 'media_player.'", entity.c_str());
+            return;
+          }
+
+          // Avoid registering the same Home Assistant callbacks on every API reconnect.
+          // ESPHome keeps these subscriptions for the whole boot, so duplicates waste RAM
+          // and can make reconnect loops unstable.
+          if (entity == id(subscribed_media_player_entity)) {
+            lv_obj_add_flag(id(setup_prompt), LV_OBJ_FLAG_HIDDEN);
+            if (esphome::api::global_api_server->is_connected()) {
+              if (!id(actions_prompt_acked) && !id(device_has_been_setup)) {
+                lv_obj_clear_flag(id(actions_prompt), LV_OBJ_FLAG_HIDDEN);
+              }
+              id(device_has_been_setup) = true;
+            }
+            ESP_LOGD("media_select", "Already subscribed to '%s'", entity.c_str());
             return;
           }
 
@@ -135,6 +160,7 @@ script:
 
           // --- Bump generation (stale callbacks from old entity are discarded) ---
           id(subscription_gen) += 1;
+          id(subscribed_media_player_entity) = entity;
           int gen = id(subscription_gen);
           int *gen_ptr = &id(subscription_gen);
 
@@ -198,10 +224,22 @@ script:
           if (esphome::api::global_api_server == nullptr) return;
 
           std::string entity = id(linked_media_player_entity).state;
-          if (entity.empty()) return;
+          if (entity.empty()) {
+            id(tv_subscription_gen) += 1;
+            id(subscribed_linked_media_player_entity) = "";
+            return;
+          }
 
           if (entity.substr(0, 13) != "media_player.") {
+            id(tv_subscription_gen) += 1;
+            id(subscribed_linked_media_player_entity) = "";
             ESP_LOGW("media_select", "Invalid linked entity '%s' — must start with 'media_player.'", entity.c_str());
+            return;
+          }
+
+          // Avoid duplicate callback registration when API clients reconnect.
+          if (entity == id(subscribed_linked_media_player_entity)) {
+            ESP_LOGD("media_select", "Already subscribed to linked player '%s'", entity.c_str());
             return;
           }
 
@@ -211,6 +249,7 @@ script:
           id(last_tv_position_timestamp) = 0;
 
           id(tv_subscription_gen) += 1;
+          id(subscribed_linked_media_player_entity) = entity;
           int gen = id(tv_subscription_gen);
           int *gen_ptr = &id(tv_subscription_gen);
 
