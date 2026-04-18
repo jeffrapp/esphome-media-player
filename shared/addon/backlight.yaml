@@ -293,7 +293,11 @@ script:
                               - light.turn_off:
                                   id: backlight
                                   transition_length: 3s
-                              - lvgl.pause:
+                              - if:
+                                  condition:
+                                    lambda: 'return ${pause_lvgl_on_screen_off};'
+                                  then:
+                                    - lvgl.pause:
 
   - id: turn_off_display
     mode: single
@@ -304,7 +308,11 @@ script:
           id: backlight
           transition_length: 1s
       - delay: 1s
-      - lvgl.pause:
+      - if:
+          condition:
+            lambda: 'return ${pause_lvgl_on_screen_off};'
+          then:
+            - lvgl.pause:
 
   - id: show_clock_view
     mode: single
