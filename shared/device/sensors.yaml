@@ -60,6 +60,7 @@ interval:
             if (pos < 0) pos = 0;
             if (dur > 0 && pos > dur) pos = dur;
             id(last_tv_media_position) = pos;
+            if (playing && t.is_valid()) id(last_tv_position_timestamp) = t.timestamp;
           } else {
             dur = id(media_duration_sensor).has_state() ? id(media_duration_sensor).state : 0.0f;
             playing = id(media_player_state_sensor).has_state() && id(media_player_state_sensor).state == "playing";
@@ -75,6 +76,7 @@ interval:
             if (pos < 0) pos = 0;
             if (dur > 0 && pos > dur) pos = dur;
             id(last_media_position) = pos;
+            if (playing && t.is_valid()) id(last_position_timestamp) = t.timestamp;
           }
       - lvgl.label.update:
             id: media_time_label
