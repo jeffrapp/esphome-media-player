@@ -282,7 +282,7 @@ script:
                 then:
                   - if:
                       condition:
-                        lambda: 'return id(clock_screensaver_enabled).state;'
+                        lambda: 'return ${clock_screensaver_supported} && id(clock_screensaver_enabled).state;'
                       then:
                         - script.execute: show_clock_view
                       else:
